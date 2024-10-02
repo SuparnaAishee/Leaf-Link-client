@@ -1,4 +1,5 @@
-export default function BlogLayout({
+/* eslint-disable prettier/prettier */
+export default function PostLayout({
   children,
 }: {
   children: React.ReactNode;
