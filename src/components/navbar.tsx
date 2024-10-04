@@ -18,6 +18,9 @@ import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/theme-switch";
 import { SearchIcon } from "@/src/components/icons";
 
+import NavbarDropDown from "./UI/NavbarDropDown";
+
+
 export const Navbar = () => {
   const searchInput = (
     <Input
@@ -26,11 +29,11 @@ export const Navbar = () => {
         inputWrapper: "bg-default-100",
         input: "text-sm",
       }}
-      endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
-          K
-        </Kbd>
-      }
+      // endContent={
+      //   <Kbd className="hidden lg:inline-block" keys={["command"]}>
+      //     K
+      //   </Kbd>
+      // }
       labelPlacement="outside"
       placeholder="Search..."
       startContent={
@@ -54,7 +57,7 @@ export const Navbar = () => {
               <NextLink
                 className={clsx(
                   linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
+                  "data-[active=true]:text-primary data-[active=true]:font-medium"
                 )}
                 color="foreground"
                 href={item.href}
@@ -72,6 +75,10 @@ export const Navbar = () => {
       >
         <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
+        </NavbarItem>
+        <NavbarItem className="hidden sm:flex gap-2">
+         
+          <NavbarDropDown/>
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
       </NavbarContent>
