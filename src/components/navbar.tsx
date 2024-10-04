@@ -48,7 +48,7 @@ export const Navbar = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <p className="font-bold text-inherit">LEAF LINK</p>
+            <p className="font-bold text-inherit text-purple-500">LEAF LINK</p>
           </NextLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-start ml-2">
@@ -77,8 +77,7 @@ export const Navbar = () => {
           <ThemeSwitch />
         </NavbarItem>
         <NavbarItem className="hidden sm:flex gap-2">
-         
-          <NavbarDropDown/>
+          <NavbarDropDown />
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
       </NavbarContent>
