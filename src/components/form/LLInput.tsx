@@ -1,21 +1,24 @@
 "use client";
 
-
-import { IInput } from "@/src/types/form";
 import { Input } from "@nextui-org/input";
 import { useFormContext } from "react-hook-form";
 
-interface IProps extends IInput {}
+interface IProps {
+  variant?: "flat" | "bordered" | "faded" | "underlined";
+  size?: "sm" | "md" | "lg";
+  required?: boolean;
+  type?: string;
+  label: string;
+  name: string;
+}
 
-export default function GTInput({
+export default function LLInput({
   variant = "bordered",
   size = "md",
   required = false,
   type = "text",
   label,
   name,
-  endContent,
-  startContent,
 }: IProps) {
   const {
     register,
@@ -24,8 +27,6 @@ export default function GTInput({
 
   return (
     <Input
-      endContent={endContent}
-      startContent={startContent}
       {...register(name)}
       errorMessage={errors[name] ? (errors[name].message as string) : ""}
       isInvalid={!!errors[name]}
