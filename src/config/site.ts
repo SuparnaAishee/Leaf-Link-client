@@ -14,7 +14,7 @@ export const siteConfig = {
     },
     {
       label: "CreatePost",
-      href: "/post",
+      href: "/profile/create-post",
     },
   ],
   navMenuItems: [

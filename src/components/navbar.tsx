@@ -1,3 +1,4 @@
+"use client"
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -19,9 +20,12 @@ import { ThemeSwitch } from "@/src/components/theme-switch";
 import { SearchIcon } from "@/src/components/icons";
 
 import NavbarDropDown from "./UI/NavbarDropDown";
+import { useUser } from "../context/user.provider";
 
 
 export const Navbar = () => {
+
+   const { user } = useUser();
   const searchInput = (
     <Input
       aria-label="Search"
@@ -76,11 +80,17 @@ export const Navbar = () => {
         <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
-        <NavbarItem className="hidden sm:flex gap-2">
-          <NavbarDropDown />
-        </NavbarItem>
+        {user?.email ? (
+          <NavbarItem className="hidden sm:flex gap-2">
+            <NavbarDropDown />
+          </NavbarItem>
+        ) : (
+          <NavbarItem className="hidden sm:flex gap-2">
+           <Link href="/login">Login</Link>
+          </NavbarItem>
+        )}
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
-      <NavbarItem><NextLink href="/login">Login</NextLink></NavbarItem>
+        
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">

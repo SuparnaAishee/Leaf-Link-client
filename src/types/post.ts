@@ -1,9 +1,14 @@
 // Define the structure of a post
 export type TPost = {
+  likes: any;
+  username: string;
   _id: string; // or use string | undefined if it might not be set
   title: string;
   description: string;
-  user: string; // Assuming user ID is a string in the frontend
+  user: {
+    name: string;
+    profilePhoto: string;
+  };
   imageUrl?: string; // optional
   category: string;
   tags?: string[]; // optional
@@ -16,7 +21,20 @@ export type TPost = {
 };
 
 export type TUser = {
-  _id: string; // or whatever ID type you are using
+  _id: string;
   name: string;
-  profilePicture?: string; // Optional, in case the user has no profile picture
+  role: string;
+  email: string;
+  status: string;
+  mobileNumber: string;
+  profilePhoto?: string;
+  bio?: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
+
+export interface IUpdateVote {
+  voteType: "upvote" | "downvote";
+  userId: string;
+  postId: string;
+}
