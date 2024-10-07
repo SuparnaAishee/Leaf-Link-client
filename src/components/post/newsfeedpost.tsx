@@ -102,117 +102,115 @@ export default function InfiniteScrollPosts({
   };
 
   return (
-  
-      <InfiniteScroll
-        dataLength={posts.length}
-        endMessage={<p className="text-center py-4">No more posts</p>}
-        hasMore={hasMore}
-        loader={<h4 className="text-center py-4">Loading...</h4>}
-        next={() => setPage(page + 1)}
-      >
-        {posts.map((post) => (
-          <div
-            key={post._id}
-            className="card mb-4 border rounded-lg shadow-md p-6 bg-default-black max-w-md mx-auto"
-          >
-            <div className="flex items-start mb-2">
-              <img
-                alt={
-                  typeof post.user === "string"
-                    ? `User ID: ${post.user}`
-                    : post.user.name
-                }
-                className="w-10 h-10 rounded-full mr-2"
-                src={
-                  typeof post.user === "string"
-                    ? "/default-profile.png"
-                    : post.user.profilePhoto || "/default-profile.png"
-                }
-              />
-              <div>
-                <h3 className="font-semibold text-sm">
-                  {typeof post.user === "string"
-                    ? `User ID: ${post.user}`
-                    : post.user.name}
-                </h3>
-                <p className="text-gray-500 text-xs">Just now</p>
-              </div>
-            </div>
-
-            {post.imageUrl && (
-              <div className="relative w-full h-48">
-                <img
-                  alt={post.title}
-                  className="absolute inset-0 w-full h-full object-cover rounded-lg mb-2 mt-6"
-                  src={post.imageUrl}
-                />
-              </div>
-            )}
-
-            <h2 className="text-md font-bold mb-1 mt-12">{post.title}</h2>
-
-            {expandedPostIds.includes(post._id) ? (
-              <p className=" mb-2">{post.description}</p>
-            ) : (
-              <>
-                {post.description.length > 100 ? (
-                  <p className=" mb-2">
-                    {post.description.slice(0, 100)}...
-                    <button
-                      className="text-blue-500 hover:underline ml-1"
-                      onClick={() => toggleExpand(post._id)}
-                    >
-                      See More
-                    </button>
-                  </p>
-                ) : (
-                  <p className="text-gray-700 mb-2">{post.description}</p>
-                )}
-              </>
-            )}
-
-            {expandedPostIds.includes(post._id) && (
-              <button
-                className="text-blue-500 hover:underline ml-1"
-                onClick={() => toggleExpand(post._id)}
-              >
-                Show Less
-              </button>
-            )}
-
-            <div className="flex justify-between items-center mt-2">
-              <div className="flex items-center">
-                <button
-                  className="text-red-500 hover:text-red-700 flex items-center"
-                  onClick={() => toggleLike(post._id)}
-                >
-                  {likedPosts.includes(post._id) ? (
-                    <FaHeart className="w-5 h-5" />
-                  ) : (
-                    <FaRegHeart className="w-5 h-5" />
-                  )}
-                  <span className="ml-1">{post.upvotes.length}</span>
-                </button>
-
-                <button className="text-blue-500 hover:underline flex items-center ml-4">
-                  <span aria-label="comments" role="img">
-                    💬
-                  </span>
-                  <span className="ml-1">{post.comments.length}</span>
-                </button>
-              </div>
-
-              <button
-                className="text-gray-500 hover:text-gray-700 flex items-center"
-                onClick={() => handleShare(post)}
-              >
-                <FaShareAlt className="w-5 h-5" />
-                <span className="ml-1">Share</span>
-              </button>
+    <InfiniteScroll
+      dataLength={posts.length}
+      endMessage={<p className="text-center py-4">No more posts</p>}
+      hasMore={hasMore}
+      loader={<h4 className="text-center py-4">Loading...</h4>}
+      next={() => setPage(page + 1)}
+    >
+      {posts.map((post) => (
+        <div
+          key={post._id}
+          className="card mb-4 border rounded-lg shadow-md p-6 bg-default-black max-w-md mx-auto"
+        >
+          <div className="flex items-start mb-2">
+            <img
+              alt={
+                typeof post.user === "string"
+                  ? `User ID: ${post.user}`
+                  : post.user.name
+              }
+              className="w-10 h-10 rounded-full mr-2"
+              src={
+                typeof post.user === "string"
+                  ? "/default-profile.png"
+                  : post.user.profilePhoto || "/default-profile.png"
+              }
+            />
+            <div>
+              <h3 className="font-semibold text-sm">
+                {typeof post.user === "string"
+                  ? `User ID: ${post.user}`
+                  : post.user.name}
+              </h3>
+              <p className="text-gray-500 text-xs">Just now</p>
             </div>
           </div>
-        ))}
-      </InfiniteScroll>
-   
+
+          {post.imageUrl && (
+            <div className="relative w-full h-48">
+              <img
+                alt={post.title}
+                className="absolute inset-0 w-full h-full object-cover rounded-lg mb-2 mt-6"
+                src={post.imageUrl}
+              />
+            </div>
+          )}
+
+          <h2 className="text-md font-bold mb-1 mt-12">{post.title}</h2>
+
+          {expandedPostIds.includes(post._id) ? (
+            <p className=" mb-2">{post.description}</p>
+          ) : (
+            <>
+              {post.description.length > 100 ? (
+                <p className=" mb-2">
+                  {post.description.slice(0, 100)}...
+                  <button
+                    className="text-blue-500 hover:underline ml-1"
+                    onClick={() => toggleExpand(post._id)}
+                  >
+                    See More
+                  </button>
+                </p>
+              ) : (
+                <p className="text-gray-700 mb-2">{post.description}</p>
+              )}
+            </>
+          )}
+
+          {expandedPostIds.includes(post._id) && (
+            <button
+              className="text-blue-500 hover:underline ml-1"
+              onClick={() => toggleExpand(post._id)}
+            >
+              Show Less
+            </button>
+          )}
+
+          <div className="flex justify-between items-center mt-2">
+            <div className="flex items-center">
+              <button
+                className="text-red-500 hover:text-red-700 flex items-center"
+                onClick={() => toggleLike(post._id)}
+              >
+                {likedPosts.includes(post._id) ? (
+                  <FaHeart className="w-5 h-5" />
+                ) : (
+                  <FaRegHeart className="w-5 h-5" />
+                )}
+                <span className="ml-1">{post.upvotes.length}</span>
+              </button>
+
+              <button className="text-blue-500 hover:underline flex items-center ml-4">
+                <span aria-label="comments" role="img">
+                  💬
+                </span>
+                <span className="ml-1">{post.comments.length}</span>
+              </button>
+            </div>
+
+            <button
+              className="text-gray-500 hover:text-gray-700 flex items-center"
+              onClick={() => handleShare(post)}
+            >
+              <FaShareAlt className="w-5 h-5" />
+              <span className="ml-1">Share</span>
+            </button>
+          </div>
+        </div>
+      ))}
+    </InfiniteScroll>
   );
 }

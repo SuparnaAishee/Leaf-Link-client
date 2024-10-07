@@ -17,27 +17,59 @@ import Footer from "@/src/components/UI/Footer";
 const popularContent = [
   {
     id: 1,
-    title: "Popular Item 1",
-    description: "Description for popular item 1.",
-    imageUrl: "https://via.placeholder.com/150", // Replace with actual image URL
+    title: "Herbs ",
+    description: "Description for  item 1.",
+    imageUrl:
+      "https://res.cloudinary.com/dwelabpll/image/upload/v1727790364/Indoor-Herb-Garden_s0hasl.jpg",
   },
   {
     id: 2,
-    title: "Popular Item 2",
+    title: "Vegetables",
     description: "Description for popular item 2.",
-    imageUrl: "https://via.placeholder.com/150", // Replace with actual image URL
+    imageUrl:
+      "https://res.cloudinary.com/dwelabpll/image/upload/v1727789789/LifeStyle-Homes_Home-Garden_jdiuku.jpg",
   },
   {
     id: 3,
-    title: "Popular Item 3",
+    title: "Flowers",
     description: "Description for popular item 3.",
-    imageUrl: "https://via.placeholder.com/150", // Replace with actual image URL
+    imageUrl:
+      "https://res.cloudinary.com/dwelabpll/image/upload/v1727790058/plant-flowers-garden_73944-17415_v4jvep.avif",
   },
   {
     id: 4,
-    title: "Popular Item 4",
+    title: "Soil Health",
     description: "Description for popular item 4.",
-    imageUrl: "https://via.placeholder.com/150", // Replace with actual image URL
+    imageUrl:
+      "https://res.cloudinary.com/dwelabpll/image/upload/v1727793288/images_5_o5keoz.jpg",
+  },
+  {
+    id: 5,
+    title: "Techniques",
+    description: "Description for popular item 4.",
+    imageUrl:
+      "https://res.cloudinary.com/dwelabpll/image/upload/v1727789751/pwuXPTXV9k8FYmiJK2UTQM_jgr5re.jpg",
+  },
+  {
+    id: 6,
+    title: "Garden Design",
+    description: "Description for popular item 4.",
+    imageUrl:
+      "https://res.cloudinary.com/dwelabpll/image/upload/v1727798378/oddgardens_rwuvet.jpg",
+  },
+  {
+    id: 7,
+    title: "Seasonal Tips",
+    description: "Description for popular item 4.",
+    imageUrl:
+      "https://res.cloudinary.com/dwelabpll/image/upload/v1727790344/1452850519201_egwhgj.jpg",
+  },
+  {
+    id: 8,
+    title: "Indoor Gardening",
+    description: "Description for popular item 4.",
+    imageUrl:
+      "https://res.cloudinary.com/dwelabpll/image/upload/v1727790194/images_4_oup5i5.jpg",
   },
 ];
 
@@ -75,7 +107,7 @@ export default function Home() {
       <div className="container mx-auto flex">
         {/* Left Sidebar - Popular Content */}
         <aside className="w-1/4 p-4 bg-default-black rounded-lg">
-          <h2 className="text-xl font-bold mb-4">Popular Content</h2>
+          <h2 className="text-xl font-bold mb-4">Content Categories</h2>
           <ul className="space-y-3">
             {popularContent.map((item) => (
               <li

@@ -77,3 +77,15 @@ export const getCurrentUser = async () => {
 //     throw new Error(error);
 //   }
 // };
+export const getMe = async () => {
+  try {
+    const { data }: any = await axiosInstance.get("/profile");
+    if (data?.success) {
+      return data;
+    } else {
+      throw new Error(data?.message);
+    }
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};

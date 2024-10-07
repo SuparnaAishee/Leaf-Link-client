@@ -1,11 +1,7 @@
-"use server"; // Ensures these functions are executed on the server side.
+"use server";
 
-
-import axiosInstance from "@/src/lib/AxiosInstance";
 import { IUpdateVote, TPost } from "@/src/types/post";
-
-
-import { revalidateTag } from "next/cache";
+import axios from "axios";
 
 interface ISinglePostResponseType {
   success: boolean;
@@ -13,76 +9,86 @@ interface ISinglePostResponseType {
   data: TPost;
 }
 
-// Create Post
+const axiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_BASE_API, // Set your API base URL here
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Create a post
 export const createPost = async (payload: Partial<TPost>) => {
   try {
-    const { data }: any = await axiosInstance.post(
-      `/posts/create-post`,
-      payload
-    );
+    const { data } = await axiosInstance.post("/posts/create-post", payload);
     return data;
   } catch (error: any) {
-    throw new Error(error);
+    throw new Error(error.response?.data?.message || error.message);
   }
 };
 
-// Update Post
+// Update a post
 export const updatePost = async (payload: any) => {
   try {
-    const { data }: any = await axiosInstance.put(
+    const { data } = await axiosInstance.put(
       `/posts/update-post/${payload?.id}`,
       payload.data
     );
     return data;
   } catch (error: any) {
-    throw new Error(error);
+    throw new Error(error.response?.data?.message || error.message);
   }
 };
 
-// Upvote or Downvote Post
+// Upvote or downvote a post
 export const upvoteOrDownvote = async (payload: IUpdateVote) => {
   try {
-    const { data }: any = await axiosInstance.put(`/posts/vote`, payload);
-    revalidateTag("post"); // Revalidate the cache for "post"
+    const { data }: { data: ISinglePostResponseType } = await axiosInstance.put(
+      "/posts/vote",
+      payload
+    );
     return data;
   } catch (error: any) {
-    throw new Error(error);
+    throw new Error(error.response?.data?.message || error.message);
   }
 };
 
-// Add to Bookmark
+// Add post to bookmarks
 export const addToBookmark = async (payload: { postId: string }) => {
   try {
-    const { data }: any = await axiosInstance.put(`/posts/bookmark`, payload);
-    revalidateTag("post");
+    const { data }: { data: ISinglePostResponseType } = await axiosInstance.put(
+      "/posts/bookmark",
+      payload
+    );
     return data;
   } catch (error: any) {
-    throw new Error(error);
+    throw new Error(error.response?.data?.message || error.message);
   }
 };
 
-// Delete Post
+// Delete a post
 export const deletePost = async (id: string) => {
   try {
-    const { data }: any = await axiosInstance.delete(`/posts/${id}`);
-    revalidateTag("post");
+    const { data }: { data: ISinglePostResponseType } =
+      await axiosInstance.delete(`/posts/${id}`);
     return data;
   } catch (error: any) {
-    throw new Error(error);
+    throw new Error(error.response?.data?.message || error.message);
   }
 };
 
-// Get Single Post
+// Get a single post
 export const getSinglePost = async (id: string) => {
   try {
-    const { data }: any = await axiosInstance.get(`/posts/${id}`);
+    const { data }: { data: ISinglePostResponseType } = await axiosInstance.get(
+      `/posts/${id}`
+    );
     return data;
   } catch (error: any) {
-    throw new Error(error);
+    throw new Error(error.response?.data?.message || error.message);
   }
 };
 
-// Get All Posts
+// Get all posts with search, sorting, and filtering
 export const getAllPost = async (query: any) => {
   try {
     const params = new URLSearchParams();
@@ -96,29 +102,29 @@ export const getAllPost = async (query: any) => {
       params.append("filter", query.filter);
     }
 
-    const { data }: any = await axiosInstance.get(`/posts`, { params });
+    const { data } = await axiosInstance.get("/posts", { params });
     return data;
   } catch (error: any) {
-    throw new Error(error);
+    throw new Error(error.response?.data?.message || error.message);
   }
 };
 
-// Get Upvoters for My Posts
+// Get upvoters for the current user's posts
 export const getUpvotersForMyPosts = async () => {
   try {
-    const { data }: any = await axiosInstance.get(`/posts/users/upvoters`);
+    const { data } = await axiosInstance.get("/posts/users/upvoters");
     return data;
   } catch (error: any) {
-    throw new Error(error);
+    throw new Error(error.response?.data?.message || error.message);
   }
 };
 
-// Get My Posts
-export const getMyPosts = async () => {
+// Get the current user's posts
+export const getMyMyPosts = async () => {
   try {
-    const { data }: any = await axiosInstance.get(`/profile/get-my-post`);
+    const { data } = await axiosInstance.get("/profile/get-my-post");
     return data;
   } catch (error: any) {
-    throw new Error(error);
+    throw new Error(error.response?.data?.message || error.message);
   }
 };
