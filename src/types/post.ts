@@ -21,11 +21,15 @@ export type TPost = {
 };
 
 export type TUser = {
+  isFollowing: any;
+  isVerified: any;
   _id: string;
   name: string;
   role: string;
   email: string;
   status: string;
+  followers?: string[];
+  following?: string[];
   mobileNumber: string;
   profilePhoto?: string;
   bio?: string;

@@ -31,8 +31,9 @@ const handleLogOut = ()=>{
         <DropdownTrigger>
           <Avatar
             className="cursor-pointer"
-            // src="https://res.cloudinary.com/dwelabpll/image/upload/v1728154232/default-profile_nwvfun.png"
-            src={user?.profilePhoto}
+            src={
+              user?.profilePhoto 
+            }
           />
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">
@@ -44,7 +45,9 @@ const handleLogOut = ()=>{
             Settings
           </DropdownItem>
 
-          <DropdownItem onClick={() => handleNavigation("/profile/create-post")}>
+          <DropdownItem
+            onClick={() => handleNavigation("/profile/create-post")}
+          >
             Create-Post
           </DropdownItem>
 

@@ -67,14 +67,19 @@ export default function InfiniteScrollPosts({
         liked ? prevLiked.filter((id) => id !== postId) : [...prevLiked, postId]
       );
 
-      // Optimistically update the post's upvote count in the local state
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post._id === postId
-            ? { ...post, upvotes: liked ? post.upvotes - 1 : post.upvotes + 1 }
-            : post
-        )
-      );
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post._id === postId
+          ? {
+              ...post,
+              upvotes: liked
+                ? post.upvotes.filter((id) => id !== postId) // Remove upvote
+                : [...post.upvotes, postId], // Add upvote
+            }
+          : post
+      )
+    );
+
     } catch (error) {
       console.error("Error toggling like:", error);
     }

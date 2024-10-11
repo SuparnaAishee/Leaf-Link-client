@@ -1,10 +1,8 @@
 "use server";
-
-import axiosInstance from "@/src/lib/AxiosInstance";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { FieldValues } from "react-hook-form";
-
+import axiosInstance from "@/src/lib/AxiosInstance";
 export const registerUser = async (userData: FieldValues) => {
   try {
     const { data } = await axiosInstance.post("/auth/register", userData);
@@ -40,7 +38,8 @@ export const logout = () => {
 };
 export const getCurrentUser = async () => {
   const accessToken = cookies().get("accessToken")?.value;
- console.log("Access Token: ", accessToken); 
+
+  console.log("Access Token: ", accessToken);
   let decodedToken = null;
 
   if (accessToken) {
@@ -55,6 +54,15 @@ export const getCurrentUser = async () => {
       status: decodedToken.status,
       profilePhoto: decodedToken.profilePhoto,
       bio: decodedToken.bio,
+      isVerified: decodedToken?.isVerified,
+      premiumStatus: decodedToken?.premiumStatus,
+      followers: decodedToken?.followers,
+      following: decodedToken?.following,
+      posts: decodedToken?.posts,
+      favorites: decodedToken?.favorites,
+      createdAt: decodedToken?.createdAt,
+      updatedAt: decodedToken?.updatedAt,
+      __v: decodedToken?.__v,
     };
   }
 
@@ -70,7 +78,6 @@ export const getCurrentUser = async () => {
 //   try{
 // const res= await axiosInstance.post("/auth/register",userData)
 
-
 // console.log(res.data)
 //   }catch(error:any)
 //   {
@@ -80,6 +87,7 @@ export const getCurrentUser = async () => {
 export const getMe = async () => {
   try {
     const { data }: any = await axiosInstance.get("/profile");
+
     if (data?.success) {
       return data;
     } else {

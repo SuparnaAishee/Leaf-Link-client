@@ -10,6 +10,8 @@ interface IProps {
   type?: string;
   label: string;
   name: string;
+  readOnly?: boolean;
+  disabled?:boolean;
 }
 
 export default function LLInput({
@@ -19,6 +21,8 @@ export default function LLInput({
   type = "text",
   label,
   name,
+  readonly,
+  disabled,
 }: IProps) {
   const {
     register,
@@ -34,6 +38,8 @@ export default function LLInput({
       size={size}
       required={required}
       type={type}
+      readOnly={readonly}
+      disabled={disabled}
       label={label}
     />
   );

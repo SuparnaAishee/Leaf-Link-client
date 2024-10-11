@@ -16,6 +16,11 @@ export const siteConfig = {
       label: "CreatePost",
       href: "/profile/create-post",
     },
+    {
+      label: "SearchUser",
+      href: "/profile/searchUser",
+    },
+  
   ],
   navMenuItems: [
     {

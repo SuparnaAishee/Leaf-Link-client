@@ -12,6 +12,7 @@ import envConfig from "@/src/config/envConfig";
 
 const axiosInstance = axios.create({
   baseURL: envConfig.baseApi,
+
 });
 
 axiosInstance.interceptors.request.use(

@@ -100,17 +100,11 @@ export default function RegisterPage() {
 
   return (
     <div className="flex h-[calc(100vh-100px)] flex-col items-center justify-center">
-      <h3 className="my-2 text-xl font-bold">Register with FoundX</h3>
-      <p className="mb-4">Help Lost Items Find Their Way Home</p>
+      <h3 className="my-2 text-xl font-bold">Register with LeafLink</h3>
+      <p className="mb-4">Know About Gardening</p>
       <div className="w-[35%]">
         <LLForm
-          //! Only for development
-          // defaultValues={{
-          //   name: "Mir Hussain",
-          //   email: "mir@gmail.com",
-          //   mobileNumber: "01711223344",
-          //   password: "123456",
-          // }}
+         
           resolver={zodResolver(registerValidationSchema)}
           onSubmit={onSubmit}
         >

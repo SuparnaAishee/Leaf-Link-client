@@ -1,11 +1,13 @@
 "use server";
-
 import axios from "axios"; // Use axios instead of nexiosInstance
 import { FieldValues } from "react-hook-form";
 
 export const updateProfile = async (payload: FieldValues) => {
   try {
-    const { data }: any = await axios.put("/profile", payload); // Axios put request
+    const { data }: any = await axios.put(
+      "http://localhost:5000/api/profile/update",
+      payload
+    ); // Axios put request
     if (data?.success) {
       return data;
     } else {

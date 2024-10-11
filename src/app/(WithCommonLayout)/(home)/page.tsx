@@ -13,6 +13,8 @@
 // Home.tsx
 import InfiniteScrollPosts from "@/src/components/post/newsfeedpost";
 import Footer from "@/src/components/UI/Footer";
+import { Button } from "@nextui-org/button";
+import Link from "next/link";
 
 const popularContent = [
   {
@@ -142,6 +144,11 @@ export default function Home() {
 
         {/* Middle Section - Infinite Scroll Content */}
         <main className="flex-1 mx-6 p-4 bg-default-black shadow-md rounded-lg ">
+          <div className="item-center justify-center pl-52 pb-6">
+            <Link href="/postAction" passHref>
+              <Button className="bg-purple-500 ">Go to postAction</Button>
+            </Link>
+          </div>
           <InfiniteScrollPosts selectedCategory={""} />
         </main>
 
