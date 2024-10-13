@@ -30,12 +30,12 @@ const SettingsPage = () => {
       <div className="bg-default-100 shadow-md rounded-lg p-6 w-full h-1/2">
         {/* Edit Profile Section */}
         <div
+          aria-label="Edit Profile" // For screen readers
+          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
           role="button" // Adding role to indicate this is a button
           tabIndex={0} // Making it focusable
-          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
           onClick={handleEditProfile} // Add click handler
           onKeyPress={handleKeyPress} // Add keyboard handler
-          aria-label="Edit Profile" // For screen readers
         >
           <FaEdit className="text-blue-500 mr-2" />
           <span className="text-lg">Edit Profile</span>
@@ -43,14 +43,14 @@ const SettingsPage = () => {
 
         {/* Make Profile Verified Section */}
         <div
+          aria-label="Make Profile Verified"
+          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
           role="button"
           tabIndex={0}
-          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
           onClick={() => console.log("Make Profile Verified clicked")}
           onKeyPress={(e) =>
             e.key === "Enter" && console.log("Make Profile Verified clicked")
           }
-          aria-label="Make Profile Verified"
         >
           <FaShieldAlt className="text-green-500 mr-2" />
           <span className="text-lg">Make Profile Verified</span>
@@ -58,14 +58,14 @@ const SettingsPage = () => {
 
         {/* Change Password Section */}
         <div
+          aria-label="Change Password"
+          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
           role="button"
           tabIndex={0}
-          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
           onClick={() => console.log("Change Password clicked")}
           onKeyPress={(e) =>
             e.key === "Enter" && console.log("Change Password clicked")
           }
-          aria-label="Change Password"
         >
           <FaLock className="text-yellow-500 mr-2" />
           <span className="text-lg">Change Password</span>
@@ -73,14 +73,14 @@ const SettingsPage = () => {
 
         {/* Profile Details Section */}
         <div
+          aria-label="Profile Details"
+          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
           role="button"
           tabIndex={0}
-          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
           onClick={() => console.log("Profile Details clicked")}
           onKeyPress={(e) =>
             e.key === "Enter" && console.log("Profile Details clicked")
           }
-          aria-label="Profile Details"
         >
           <FaUser className="text-purple-500 mr-2" />
           <span className="text-lg">Profile Details</span>
@@ -88,14 +88,14 @@ const SettingsPage = () => {
 
         {/* Account Status Section */}
         <div
+          aria-label="Account Status"
+          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
           role="button"
           tabIndex={0}
-          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
           onClick={() => console.log("Account Status clicked")}
           onKeyPress={(e) =>
             e.key === "Enter" && console.log("Account Status clicked")
           }
-          aria-label="Account Status"
         >
           <FaClipboardCheck className="text-orange-500 mr-2" />
           <span className="text-lg">Account Status</span>
@@ -103,14 +103,14 @@ const SettingsPage = () => {
 
         {/* Favourites Section */}
         <div
+          aria-label="Favourites"
+          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
           role="button"
           tabIndex={0}
-          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
           onClick={() => console.log("Favourites clicked")}
           onKeyPress={(e) =>
             e.key === "Enter" && console.log("Favourites clicked")
           }
-          aria-label="Favourites"
         >
           <FaHeart className="text-red-500 mr-2" />
           <span className="text-lg">Favourites</span>

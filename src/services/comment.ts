@@ -1,6 +1,7 @@
 "use server";
 
 import axios from "axios";
+
 import { ICommentPayload } from "@/src/types/comment";
 
 // Base axios instance for handling API requests
@@ -16,8 +17,9 @@ export const addComment = async (payload: ICommentPayload) => {
   try {
     const { data }: any = await axiosInstance.post(
       `/comments/add-comment`,
-      payload
+      payload,
     );
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || "Error adding comment");
@@ -28,6 +30,7 @@ export const addComment = async (payload: ICommentPayload) => {
 export const getAllComments = async () => {
   try {
     const { data }: any = await axiosInstance.get(`/comments`);
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || "Error fetching comments");
@@ -38,6 +41,7 @@ export const getAllComments = async () => {
 export const getSingleComment = async (id: string) => {
   try {
     const { data }: any = await axiosInstance.get(`/comments/${id}`);
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || "Error fetching comment");
@@ -52,8 +56,9 @@ export const editComment = async (payload: {
   try {
     const { data }: any = await axiosInstance.put(
       `/comments/edit-comment/${payload.id}`,
-      payload.data
+      payload.data,
     );
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || "Error editing comment");
@@ -64,6 +69,7 @@ export const editComment = async (payload: {
 export const deleteComment = async (id: string) => {
   try {
     const { data }: any = await axiosInstance.delete(`/comments/${id}`);
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || "Error deleting comment");

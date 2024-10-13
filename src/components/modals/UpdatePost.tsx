@@ -6,19 +6,22 @@ import { FieldValues, SubmitHandler } from "react-hook-form";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@nextui-org/input";
+import { useQueryClient } from "@tanstack/react-query";
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/modal";
+import { Spinner } from "@nextui-org/spinner";
+import { Checkbox } from "@nextui-org/checkbox";
+import { Button } from "@nextui-org/button";
+
+import Editor from "../UI/Editor/Editor";
 
 import { useGetSInglePost, useUpdatePost } from "@/src/hooks/post";
 import { useUser } from "@/src/context/user.provider";
-import { useQueryClient } from "@tanstack/react-query";
 import { useShowUpdatePostModal } from "@/src/store/updatePostModal";
-
 import { uploadToCloudinary } from "@/src/utils/uploadToCloudinary";
 import { useGetMe } from "@/src/hooks/profile";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/modal";
-import { Spinner } from "@nextui-org/spinner";
-import Editor from "../UI/Editor/Editor";
-import { Checkbox } from "@nextui-org/checkbox";
-import { Button } from "@nextui-org/button";
+
+
+
 interface IProps {
   postId: string;
   setPostId: Dispatch<SetStateAction<string>>;
@@ -41,6 +44,7 @@ const UpdatePost = ({ postId, setPostId }: IProps) => {
     e.preventDefault();
     if (e.target.files) {
       const image = URL.createObjectURL(e.target.files[0]);
+
       setImage(e.target.files[0]);
       setImagePreview(image);
     }
@@ -55,8 +59,10 @@ const UpdatePost = ({ postId, setPostId }: IProps) => {
         content,
       },
     };
+
     if (image) {
       const imageUrl = await uploadToCloudinary(image as File, "image");
+
       postData.data.imageUrl = imageUrl;
     }
 
@@ -96,11 +102,11 @@ const UpdatePost = ({ postId, setPostId }: IProps) => {
   return (
     <>
       <Modal
-        size="5xl"
-        scrollBehavior="inside"
         isOpen={showModal}
-        onOpenChange={closeModal}
         placement="top-center"
+        scrollBehavior="inside"
+        size="5xl"
+        onOpenChange={closeModal}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalContent>
@@ -119,9 +125,9 @@ const UpdatePost = ({ postId, setPostId }: IProps) => {
 
                 <ModalBody>
                   <Editor
-                    setUploadingImage={setUploadingImage}
                     content={content}
                     setContent={setContent}
+                    setUploadingImage={setUploadingImage}
                   />
                   <div className="mt-5 space-y-3">
                     <Input
@@ -137,9 +143,9 @@ const UpdatePost = ({ postId, setPostId }: IProps) => {
                       type="text"
                     />
                     <Input
-                      onChange={handleImageChange}
                       name="imageUrl"
                       type="file"
+                      onChange={handleImageChange}
                     />
                     {imagePreview && (
                       <div className="relative rounded-xl h-[300px] border-2 border-dashed border-default-300 p-2">
@@ -181,7 +187,7 @@ const UpdatePost = ({ postId, setPostId }: IProps) => {
                   <Button color="danger" variant="flat" onPress={closeModal}>
                     Close
                   </Button>
-                  <Button isLoading={loading} type="submit" color="primary">
+                  <Button color="primary" isLoading={loading} type="submit">
                     Update Post
                   </Button>
                 </ModalFooter>

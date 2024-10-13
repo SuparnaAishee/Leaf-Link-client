@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { TPost } from "@/src/types";
-import handleCopyPostURL from "@/src/utils/handleCopyPostURL";
-
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
-
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@nextui-org/dropdown";
 import { MoreVerticalIcon } from "lucide-react";
 import { Options } from "react-to-pdf";
+
+import handleCopyPostURL from "@/src/utils/handleCopyPostURL";
+import { TPost } from "@/src/types";
 
 interface IProps {
   post: TPost;
@@ -21,10 +25,10 @@ export default function PostActions({ post, toPDF }: IProps) {
         <MoreVerticalIcon cursor="pointer" />
       </DropdownTrigger>
       <DropdownMenu aria-label="Static Actions">
-        <DropdownItem onClick={() => handleCopyPostURL(post?._id)} key="copy">
+        <DropdownItem key="copy" onClick={() => handleCopyPostURL(post?._id)}>
           Copy Link
         </DropdownItem>
-        <DropdownItem onClick={() => toPDF()} key="pdf">
+        <DropdownItem key="pdf" onClick={() => toPDF()}>
           Generate PDF
         </DropdownItem>
       </DropdownMenu>

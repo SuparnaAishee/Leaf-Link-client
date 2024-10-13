@@ -11,7 +11,7 @@ interface IProps {
   label: string;
   name: string;
   readOnly?: boolean;
-  disabled?:boolean;
+  disabled?: boolean;
 }
 
 export default function LLInput({
@@ -32,15 +32,15 @@ export default function LLInput({
   return (
     <Input
       {...register(name)}
+      disabled={disabled}
       errorMessage={errors[name] ? (errors[name].message as string) : ""}
       isInvalid={!!errors[name]}
-      variant={variant}
-      size={size}
-      required={required}
-      type={type}
-      readOnly={readonly}
-      disabled={disabled}
       label={label}
+      readOnly={readonly}
+      required={required}
+      size={size}
+      type={type}
+      variant={variant}
     />
   );
 }

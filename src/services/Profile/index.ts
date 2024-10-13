@@ -6,8 +6,9 @@ export const updateProfile = async (payload: FieldValues) => {
   try {
     const { data }: any = await axios.put(
       "http://localhost:5000/api/profile/update",
-      payload
+      payload,
     ); // Axios put request
+
     if (data?.success) {
       return data;
     } else {
@@ -21,6 +22,7 @@ export const updateProfile = async (payload: FieldValues) => {
 export const verifyProfile = async (payload: any) => {
   try {
     const { data }: any = await axios.post("/verify-profile", payload); // Axios post request
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message); // Enhanced error handling

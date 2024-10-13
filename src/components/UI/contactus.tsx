@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 
@@ -11,14 +11,14 @@ const ContactForm = () => {
 
   const [submitted, setSubmitted] = useState(false);
 
-  const handleChange = (e: { target: { name: any; value: any; }; }) => {
+  const handleChange = (e: { target: { name: any; value: any } }) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
+  const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     // This is just a dummy form, so we don't need to submit it anywhere.
@@ -40,43 +40,43 @@ const ContactForm = () => {
   return (
     <section className="flex flex-col items-center justify-center min-h-screen bg-default-black p-6">
       <form
-        onSubmit={handleSubmit}
         className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg"
+        onSubmit={handleSubmit}
       >
         <h2 className="text-2xl font-semibold text-purple-600 mb-4">
           Contact Us
         </h2>
 
         <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-700 mb-2">
+          <label className="block text-gray-700 mb-2" htmlFor="name">
             Name
           </label>
           <input
-            type="text"
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
             id="name"
             name="name"
+            type="text"
             value={formData.name}
             onChange={handleChange}
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
           />
         </div>
 
         <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 mb-2">
+          <label className="block text-gray-700 mb-2" htmlFor="email">
             Email
           </label>
           <input
-            type="email"
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
             id="email"
             name="email"
+            type="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
           />
         </div>
 
         <div className="mb-4">
-          <label htmlFor="message" className="block text-gray-700 mb-2">
+          <label className="block text-gray-700 mb-2" htmlFor="message">
             Message
           </label>
           <textarea
@@ -86,12 +86,12 @@ const ContactForm = () => {
             onChange={handleChange}
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
             // rows="4"
-           />
+          />
         </div>
 
         <button
-          type="submit"
           className="w-full bg-purple-600 text-white font-semibold p-3 rounded-lg hover:bg-purple-700 transition duration-300"
+          type="submit"
         >
           Submit
         </button>

@@ -1,14 +1,13 @@
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable prettier/prettier */
 "use client";
-import { protectedRoutes } from "@/src/constant";
-import { useUser } from "@/src/context/user.provider";
-import { logout } from "@/src/services/AuthService";
 import { Avatar } from "@nextui-org/avatar";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
 import { usePathname, useRouter } from "next/navigation";
 
-
+import { protectedRoutes } from "@/src/constant";
+import { useUser } from "@/src/context/user.provider";
+import { logout } from "@/src/services/AuthService";
 
 const NavbarDropDown = () => {
 
@@ -32,7 +31,7 @@ const handleLogOut = ()=>{
           <Avatar
             className="cursor-pointer"
             src={
-              user?.profilePhoto 
+              user?.profilePhoto
             }
           />
         </DropdownTrigger>
@@ -49,6 +48,11 @@ const handleLogOut = ()=>{
             onClick={() => handleNavigation("/profile/create-post")}
           >
             Create-Post
+          </DropdownItem>
+          <DropdownItem
+            onClick={() => handleNavigation("/admin")}
+          >
+            Admin Dashboard
           </DropdownItem>
 
           <DropdownItem

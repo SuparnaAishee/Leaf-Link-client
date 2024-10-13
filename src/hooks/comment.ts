@@ -1,10 +1,16 @@
 "use client";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-
 import { toast } from "sonner";
+
 import { IComment } from "../types/comment";
-import { addComment, deleteComment, editComment, getAllComments, getSingleComment } from "../services/comment";
+import {
+  addComment,
+  deleteComment,
+  editComment,
+  getAllComments,
+  getSingleComment,
+} from "../services/comment";
 
 interface ICommentResponse {
   success: boolean;

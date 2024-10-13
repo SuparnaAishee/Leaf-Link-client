@@ -12,11 +12,12 @@ export const followUser = async (payload: FollowPayload) => {
   try {
     const { data } = await axios.post(
       "http://localhost:5000/api/follow",
-      payload
-      
+      payload,
     );
+
     console.log(data);
     revalidateTag("user");
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message);

@@ -1,7 +1,8 @@
 "use server";
 
-import { IUpdateVote, TPost } from "@/src/types/post";
 import axios from "axios";
+
+import { IUpdateVote, TPost } from "@/src/types/post";
 
 interface ISinglePostResponseType {
   success: boolean;
@@ -20,6 +21,7 @@ const axiosInstance = axios.create({
 export const createPost = async (payload: Partial<TPost>) => {
   try {
     const { data } = await axiosInstance.post("/posts/create-post", payload);
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message);
@@ -31,8 +33,9 @@ export const updatePost = async (payload: any) => {
   try {
     const { data } = await axiosInstance.put(
       `/posts/update-post/${payload?.id}`,
-      payload.data
+      payload.data,
     );
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message);
@@ -44,8 +47,9 @@ export const upvoteOrDownvote = async (payload: IUpdateVote) => {
   try {
     const { data }: { data: ISinglePostResponseType } = await axiosInstance.put(
       "/posts/vote",
-      payload
+      payload,
     );
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message);
@@ -57,8 +61,9 @@ export const addToBookmark = async (payload: { postId: string }) => {
   try {
     const { data }: { data: ISinglePostResponseType } = await axiosInstance.put(
       "/posts/bookmark",
-      payload
+      payload,
     );
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message);
@@ -70,6 +75,7 @@ export const deletePost = async (id: string) => {
   try {
     const { data }: { data: ISinglePostResponseType } =
       await axiosInstance.delete(`/posts/${id}`);
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message);
@@ -80,8 +86,9 @@ export const deletePost = async (id: string) => {
 export const getSinglePost = async (id: string) => {
   try {
     const { data }: { data: ISinglePostResponseType } = await axiosInstance.get(
-      `/posts/${id}`
+      `/posts/${id}`,
     );
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message);
@@ -92,6 +99,7 @@ export const getSinglePost = async (id: string) => {
 export const getAllPost = async (query: any) => {
   try {
     const params = new URLSearchParams();
+
     if (query?.searchTerm) {
       params.append("searchTerm", query.searchTerm);
     }
@@ -103,6 +111,7 @@ export const getAllPost = async (query: any) => {
     }
 
     const { data } = await axiosInstance.get("/posts", { params });
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message);
@@ -113,6 +122,7 @@ export const getAllPost = async (query: any) => {
 export const getUpvotersForMyPosts = async () => {
   try {
     const { data } = await axiosInstance.get("/posts/users/upvoters");
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message);
@@ -123,6 +133,7 @@ export const getUpvotersForMyPosts = async () => {
 export const getMyMyPosts = async () => {
   try {
     const { data } = await axiosInstance.get("/profile/get-my-post");
+
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message);

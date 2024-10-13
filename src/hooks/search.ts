@@ -1,7 +1,7 @@
 // src/hooks/useSearchUsers.ts
 import { useQuery } from "@tanstack/react-query";
-import { searchUsers } from "../services/search/search";
 
+import { searchUsers } from "../services/search/search";
 
 export const useSearchUsers = (query: string) => {
   return useQuery({

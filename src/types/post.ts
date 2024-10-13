@@ -21,8 +21,8 @@ export type TPost = {
 };
 
 export type TUser = {
-  isFollowing: any;
-  isVerified: any;
+  isFollowing: string[];
+  isVerified: boolean;
   _id: string;
   name: string;
   role: string;
@@ -35,6 +35,7 @@ export type TUser = {
   bio?: string;
   createdAt?: string;
   updatedAt?: string;
+  premiumStatus: boolean;
 };
 
 export interface IUpdateVote {

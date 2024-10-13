@@ -2,8 +2,9 @@
 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { FieldValues } from "react-hook-form";
-import { updateProfile, verifyProfile } from "../services/Profile";
 import { toast } from "sonner";
+
+import { updateProfile, verifyProfile } from "../services/Profile";
 import { getMe } from "../services/AuthService";
 import { IUser } from "../types";
 

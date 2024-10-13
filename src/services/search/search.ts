@@ -12,11 +12,13 @@ export const searchUsers = async (query: string) => {
         params: {
           q: query, // Pass the query to the backend
         },
-      }
+      },
     );
+
     return response.data; // Assuming your API returns the user list in `data`
   } catch (error) {
     console.error("Error searching users:", error);
+
     return []; // Return an empty array in case of an error
   }
 };

@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
-import { followUser } from "../services/Follow";
 import { toast } from "sonner";
+
+import { followUser } from "../services/Follow";
 
 export const useFollowUnfollow = () => {
   return useMutation<any, Error, any>({

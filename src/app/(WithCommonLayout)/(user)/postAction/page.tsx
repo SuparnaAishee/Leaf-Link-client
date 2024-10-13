@@ -11,7 +11,7 @@
 //   const [category, setCategory] = useState(""); // State for selected category
 //   const [likedPosts, setLikedPosts] = useState<string[]>([]);
 //   const [loading, setLoading] = useState(false);
-  
+
 //   const [expandedPostIds, setExpandedPostIds] = useState<string[]>([]); // State to track expanded posts
 //   const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>(
 //     {},
@@ -342,10 +342,10 @@
 //     </div>
 //   );
 // }
-
 "use client";
 import { useState, useEffect } from "react";
 import { FaHeart, FaRegHeart, FaShareAlt } from "react-icons/fa";
+
 import { TPost } from "@/src/types/post";
 
 export default function PostsPage() {
@@ -363,6 +363,7 @@ export default function PostsPage() {
 
       // Construct the URL with both search and category parameters
       const url = new URL(`http://localhost:5000/api/posts`);
+
       if (searchQuery) url.searchParams.append("searchTerm", searchQuery); // Append search term
       if (categoryQuery) url.searchParams.append("category", categoryQuery); // Append category filter
 
@@ -370,15 +371,21 @@ export default function PostsPage() {
 
       if (!res.ok) {
         console.error("Failed to fetch posts");
+
         return;
       }
 
       const response = await res.json();
       const newPosts: TPost[] = response.data;
 
+      // Filter to include only posts where isPremium is false
+      const nonPremiumPosts = newPosts.filter(
+        (post) => post.isPremium === false,
+      );
+
       // Sort posts by upvotes (most popular first)
-      newPosts.sort((a, b) => b.upvotes.length - a.upvotes.length);
-      setPosts(newPosts);
+      nonPremiumPosts.sort((a, b) => b.upvotes.length - a.upvotes.length);
+      setPosts(nonPremiumPosts);
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {
@@ -410,7 +417,9 @@ export default function PostsPage() {
       });
 
       setLikedPosts((prevLiked) =>
-        liked ? prevLiked.filter((id) => id !== postId) : [...prevLiked, postId]
+        liked
+          ? prevLiked.filter((id) => id !== postId)
+          : [...prevLiked, postId],
       );
 
       // Optimistically update the post's upvote count in the local state
@@ -423,8 +432,8 @@ export default function PostsPage() {
                   ? post.upvotes.filter((id) => id !== postId) // Remove upvote
                   : [...post.upvotes, postId], // Add upvote
               }
-            : post
-        )
+            : post,
+        ),
       );
     } catch (error) {
       console.error("Error toggling like:", error);
@@ -444,7 +453,7 @@ export default function PostsPage() {
         .catch((error) => console.error("Error sharing post:", error));
     } else {
       navigator.clipboard.writeText(
-        window.location.href + `/posts/${post._id}`
+        window.location.href + `/posts/${post._id}`,
       );
       alert("Post URL copied to clipboard");
     }
@@ -469,18 +478,18 @@ export default function PostsPage() {
       <div className="w-1/2 mx-auto">
         {/* Search Field */}
         <input
-          type="text"
+          className="border p-2 mb-4 w-full rounded-lg"
           placeholder="Search posts..."
+          type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="border p-2 mb-4 w-full rounded-lg"
         />
 
         {/* Category Selection */}
         <select
+          className="border p-2 mb-4 w-full rounded-lg"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="border p-2 mb-4 w-full rounded-lg"
         >
           <option value="">Select Category</option>
           <option value="plant health">Plant Health</option>
@@ -537,8 +546,8 @@ export default function PostsPage() {
                   ? post.description
                   : `${post.description.slice(0, 100)}...`}
                 <button
-                  onClick={() => toggleExpandedDescription(post._id)}
                   className="text-blue-500 ml-2"
+                  onClick={() => toggleExpandedDescription(post._id)}
                 >
                   {expandedPostIds.includes(post._id) ? "See Less" : "See More"}
                 </button>

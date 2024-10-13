@@ -61,17 +61,15 @@
 // export default RegisterPage;
 
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@nextui-org/button";
+import Link from "next/link";
+import { FieldValues, SubmitHandler } from "react-hook-form";
+
 import LLForm from "@/src/components/form/LLFrom";
 import LLInput from "@/src/components/form/LLInput";
 import { useUserRegistration } from "@/src/hooks/auth.hook";
-
 import registerValidationSchema from "@/src/schemas/register.validation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@nextui-org/button";
-
-import Link from "next/link";
-
-import { FieldValues, SubmitHandler } from "react-hook-form";
 
 export default function RegisterPage() {
   const { mutate: handleUserRegistration, isPending } = useUserRegistration();
@@ -104,7 +102,6 @@ export default function RegisterPage() {
       <p className="mb-4">Know About Gardening</p>
       <div className="w-[35%]">
         <LLForm
-         
           resolver={zodResolver(registerValidationSchema)}
           onSubmit={onSubmit}
         >

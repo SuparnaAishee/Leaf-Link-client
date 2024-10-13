@@ -50,56 +50,56 @@
 
 "use client";
 
-import LLForm from "@/src/components/form/LLFrom";
-import LLInput from "@/src/components/form/LLInput";
-import { useUser } from "@/src/context/user.provider";
-import { useUserLogin } from "@/src/hooks/auth.hook";
-import { loginValidationSchema } from "@/src/schemas/login.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@nextui-org/button";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-
 import { useEffect } from "react";
-
 import { FieldValues, SubmitHandler } from "react-hook-form";
+
+import { loginValidationSchema } from "@/src/schemas/login.validation";
+import { useUserLogin } from "@/src/hooks/auth.hook";
+import { useUser } from "@/src/context/user.provider";
+import LLInput from "@/src/components/form/LLInput";
+import LLForm from "@/src/components/form/LLFrom";
 
 const LoginPage = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const {setIsLoading : userLoading} =useUser();
+  const { setIsLoading: userLoading } = useUser();
 
-  const redirect = searchParams.get("redirect")
-  const { mutate: handleUserLogin, isPending ,isSuccess} = useUserLogin();
+  const redirect = searchParams.get("redirect");
+  const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     console.log(data);
-     handleUserLogin(data);
-     userLoading(true);
+    handleUserLogin(data);
+    userLoading(true);
   };
 
-useEffect(()=>{
-if (!isPending && isSuccess) {
-  if (redirect) {
-    router.push(redirect);
-  } else {
-    router.push("/");
-  }
-}
-},[isPending,isSuccess])
+  useEffect(() => {
+    if (!isPending && isSuccess) {
+      if (redirect) {
+        router.push(redirect);
+      } else {
+        router.push("/");
+      }
+    }
+  }, [isPending, isSuccess]);
+
   return (
     <div className="flex h-[calc(100vh-200px)] w-full flex-col items-center justify-center">
       <h3 className="my-2 text-2xl font-bold">Login with LeafLink</h3>
       <p className="mb-4">Welcome Back! Let&lsquo;s Get Started</p>
       <div className="w-[35%]">
         <LLForm
-          onSubmit={onSubmit}
           resolver={zodResolver(loginValidationSchema)}
+          onSubmit={onSubmit}
         >
           <div className="py-3">
-            <LLInput name="email" label="Email" type="email" />
+            <LLInput label="Email" name="email" type="email" />
           </div>
           <div className="py-3">
-            <LLInput name="password" label="Password" type="password" />
+            <LLInput label="Password" name="password" type="password" />
           </div>
 
           <Button

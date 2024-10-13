@@ -9,7 +9,7 @@ import {
 } from "react";
 
 import { getCurrentUser } from "../services/AuthService";
-import { TUser } from "../types/post";
+import { TUser } from "../types";
 
 const UserContext = createContext<IUserProviderValues | undefined>(undefined);
 
@@ -27,7 +27,15 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const handleUser = async () => {
     const user = await getCurrentUser();
 
-    setUser(user);
+    //   setUser(user);
+    //   setIsLoading(false);
+    // };
+
+    if (user) {
+      setUser(user);
+    } else {
+      setUser(null); // Handle the case where user is null
+    }
     setIsLoading(false);
   };
 

@@ -3,12 +3,10 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { BoldIcon, ImageIcon, ItalicIcon, VideoIcon } from "lucide-react";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import Image from "@tiptap/extension-image";
-import { uploadToCloudinary } from "@/src/utils/uploadToCloudinary";
 import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
-import IFrame from "./IFrame";
 import TextStyle from "@tiptap/extension-text-style";
 import ListItem from "@tiptap/extension-list-item";
 import Color from "@tiptap/extension-color";
@@ -17,6 +15,10 @@ import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import BulletList from "@tiptap/extension-bullet-list";
+
+import IFrame from "./IFrame";
+
+import { uploadToCloudinary } from "@/src/utils/uploadToCloudinary";
 interface IProps {
   content: string;
   setContent: Dispatch<SetStateAction<string>>;
@@ -68,9 +70,11 @@ const Editor = ({ content, setContent, setUploadingImage }: IProps) => {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (file) {
       setUploadingImage(true);
       const imageUrl = await uploadToCloudinary(file, "image");
+
       setUploadingImage(false);
       if (imageUrl && editor) {
         editor.chain().focus().setImage({ src: imageUrl }).run();
@@ -91,34 +95,34 @@ const Editor = ({ content, setContent, setUploadingImage }: IProps) => {
       {editor && (
         <div className="flex flex-wrap mb-2 gap-2 editor-button-group">
           <button
+            className={editor.isActive("bold") ? "is-active" : ""}
+            disabled={!editor.can().chain().focus().toggleBold().run()}
             type="button"
             onClick={() => editor.chain().focus().toggleBold().run()}
-            disabled={!editor.can().chain().focus().toggleBold().run()}
-            className={editor.isActive("bold") ? "is-active" : ""}
           >
             <BoldIcon className="size-4" /> Bold
           </button>
           <button
+            className={editor.isActive("italic") ? "is-active" : ""}
+            disabled={!editor.can().chain().focus().toggleItalic().run()}
             type="button"
             onClick={() => editor.chain().focus().toggleItalic().run()}
-            disabled={!editor.can().chain().focus().toggleItalic().run()}
-            className={editor.isActive("italic") ? "is-active" : ""}
           >
             <ItalicIcon className="size-4" /> Italic
           </button>
           <button
+            className={editor.isActive("strike") ? "is-active" : ""}
+            disabled={!editor.can().chain().focus().toggleStrike().run()}
             type="button"
             onClick={() => editor.chain().focus().toggleStrike().run()}
-            disabled={!editor.can().chain().focus().toggleStrike().run()}
-            className={editor.isActive("strike") ? "is-active" : ""}
           >
             Strike
           </button>
           <button
+            className={editor.isActive("code") ? "is-active" : ""}
+            disabled={!editor.can().chain().focus().toggleCode().run()}
             type="button"
             onClick={() => editor.chain().focus().toggleCode().run()}
-            disabled={!editor.can().chain().focus().toggleCode().run()}
-            className={editor.isActive("code") ? "is-active" : ""}
           >
             Code
           </button>
@@ -135,103 +139,103 @@ const Editor = ({ content, setContent, setUploadingImage }: IProps) => {
             Clear nodes
           </button>
           <button
+            className={editor.isActive("paragraph") ? "is-active" : ""}
             type="button"
             onClick={() => editor.chain().focus().setParagraph().run()}
-            className={editor.isActive("paragraph") ? "is-active" : ""}
           >
             Paragraph
           </button>
           <button
+            className={
+              editor.isActive("heading", { level: 1 }) ? "is-active" : ""
+            }
             type="button"
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 1 }).run()
-            }
-            className={
-              editor.isActive("heading", { level: 1 }) ? "is-active" : ""
             }
           >
             H1
           </button>
           <button
+            className={
+              editor.isActive("heading", { level: 2 }) ? "is-active" : ""
+            }
             type="button"
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 2 }).run()
-            }
-            className={
-              editor.isActive("heading", { level: 2 }) ? "is-active" : ""
             }
           >
             H2
           </button>
           <button
+            className={
+              editor.isActive("heading", { level: 3 }) ? "is-active" : ""
+            }
             type="button"
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 3 }).run()
-            }
-            className={
-              editor.isActive("heading", { level: 3 }) ? "is-active" : ""
             }
           >
             H3
           </button>
           <button
+            className={
+              editor.isActive("heading", { level: 4 }) ? "is-active" : ""
+            }
             type="button"
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 4 }).run()
-            }
-            className={
-              editor.isActive("heading", { level: 4 }) ? "is-active" : ""
             }
           >
             H4
           </button>
           <button
+            className={
+              editor.isActive("heading", { level: 5 }) ? "is-active" : ""
+            }
             type="button"
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 5 }).run()
-            }
-            className={
-              editor.isActive("heading", { level: 5 }) ? "is-active" : ""
             }
           >
             H5
           </button>
           <button
+            className={
+              editor.isActive("heading", { level: 6 }) ? "is-active" : ""
+            }
             type="button"
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 6 }).run()
-            }
-            className={
-              editor.isActive("heading", { level: 6 }) ? "is-active" : ""
             }
           >
             H6
           </button>
           <button
+            className={editor.isActive("bulletList") ? "is-active" : ""}
             type="button"
             onClick={() => editor.chain().focus().toggleBulletList().run()}
-            className={editor.isActive("bulletList") ? "is-active" : ""}
           >
             Bullet list
           </button>
           <button
+            className={editor.isActive("orderedList") ? "is-active" : ""}
             type="button"
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            className={editor.isActive("orderedList") ? "is-active" : ""}
           >
             Ordered list
           </button>
           <button
+            className={editor.isActive("codeBlock") ? "is-active" : ""}
             type="button"
             onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-            className={editor.isActive("codeBlock") ? "is-active" : ""}
           >
             Code block
           </button>
           <button
+            className={editor.isActive("blockquote") ? "is-active" : ""}
             type="button"
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
-            className={editor.isActive("blockquote") ? "is-active" : ""}
           >
             Blockquote
           </button>
@@ -242,45 +246,45 @@ const Editor = ({ content, setContent, setUploadingImage }: IProps) => {
             Horizontal rule
           </button>
           <button
+            className={editor.isActive("highlight") ? "is-active" : ""}
             type="button"
             onClick={() => editor.chain().focus().toggleHighlight().run()}
-            className={editor.isActive("highlight") ? "is-active" : ""}
           >
             Highlight
           </button>
           <button
-            type="button"
-            onClick={() => editor.chain().focus().setTextAlign("left").run()}
             className={
               editor.isActive({ textAlign: "left" }) ? "is-active" : ""
             }
+            type="button"
+            onClick={() => editor.chain().focus().setTextAlign("left").run()}
           >
             Left
           </button>
           <button
-            type="button"
-            onClick={() => editor.chain().focus().setTextAlign("center").run()}
             className={
               editor.isActive({ textAlign: "center" }) ? "is-active" : ""
             }
+            type="button"
+            onClick={() => editor.chain().focus().setTextAlign("center").run()}
           >
             Center
           </button>
           <button
-            type="button"
-            onClick={() => editor.chain().focus().setTextAlign("right").run()}
             className={
               editor.isActive({ textAlign: "right" }) ? "is-active" : ""
             }
+            type="button"
+            onClick={() => editor.chain().focus().setTextAlign("right").run()}
           >
             Right
           </button>
           <button
-            type="button"
-            onClick={() => editor.chain().focus().setTextAlign("justify").run()}
             className={
               editor.isActive({ textAlign: "justify" }) ? "is-active" : ""
             }
+            type="button"
+            onClick={() => editor.chain().focus().setTextAlign("justify").run()}
           >
             Justify
           </button>
@@ -291,40 +295,40 @@ const Editor = ({ content, setContent, setUploadingImage }: IProps) => {
             Hard break
           </button>
           <button
+            disabled={!editor.can().chain().focus().undo().run()}
             type="button"
             onClick={() => editor.chain().focus().undo().run()}
-            disabled={!editor.can().chain().focus().undo().run()}
           >
             Undo
           </button>
           <button
+            disabled={!editor.can().chain().focus().redo().run()}
             type="button"
             onClick={() => editor.chain().focus().redo().run()}
-            disabled={!editor.can().chain().focus().redo().run()}
           >
             Redo
           </button>
           <label htmlFor="photo">
             <input
-              onChange={handleFileChange}
-              type="file"
+              ref={fileInputRef}
               hidden
               id="photo"
-              ref={fileInputRef}
+              type="file"
+              onChange={handleFileChange}
             />
 
             <button
+              className="flex gap-2 border border-gray-50 items-center justify-center rounded-lg px-2 py-2"
               type="button"
               onClick={handleClick}
-              className="flex gap-2 border border-gray-50 items-center justify-center rounded-lg px-2 py-2"
             >
               <ImageIcon className="size-4" /> Upload Image
             </button>
           </label>
           <button
+            className="flex gap-2 border border-gray-50 items-center justify-center rounded-lg px-2 py-2"
             type="button"
             onClick={addIframe}
-            className="flex gap-2 border border-gray-50 items-center justify-center rounded-lg px-2 py-2"
           >
             <VideoIcon className="size-4" /> Add Video Link
           </button>

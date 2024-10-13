@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { FaHeart, FaRegHeart, FaShareAlt } from "react-icons/fa"; // Import love and share icons
+import { FaHeart, FaRegHeart, FaShareAlt } from "react-icons/fa";
 
 import { TPost } from "@/src/types/post";
 
@@ -23,7 +23,7 @@ export default function InfiniteScrollPosts({
   const fetchPosts = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/posts?page=${page}&category=${selectedCategory}`
+        `http://localhost:5000/api/posts?page=${page}&category=${selectedCategory}`,
       );
 
       if (!res.ok) {
@@ -35,10 +35,13 @@ export default function InfiniteScrollPosts({
       const response = await res.json();
       const newPosts: TPost[] = response.data;
 
-      if (newPosts.length === 0) {
+      // Filter for non-premium posts
+      const filteredPosts = newPosts.filter((post) => post.isPremium === false);
+
+      if (filteredPosts.length === 0) {
         setHasMore(false);
       } else {
-        setPosts((prevPosts) => [...prevPosts, ...newPosts]);
+        setPosts((prevPosts) => [...prevPosts, ...filteredPosts]);
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -50,7 +53,7 @@ export default function InfiniteScrollPosts({
     setExpandedPostIds((prevExpanded) =>
       prevExpanded.includes(postId)
         ? prevExpanded.filter((id) => id !== postId)
-        : [...prevExpanded, postId]
+        : [...prevExpanded, postId],
     );
   };
 
@@ -64,22 +67,23 @@ export default function InfiniteScrollPosts({
       });
 
       setLikedPosts((prevLiked) =>
-        liked ? prevLiked.filter((id) => id !== postId) : [...prevLiked, postId]
+        liked
+          ? prevLiked.filter((id) => id !== postId)
+          : [...prevLiked, postId],
       );
 
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post._id === postId
-          ? {
-              ...post,
-              upvotes: liked
-                ? post.upvotes.filter((id) => id !== postId) // Remove upvote
-                : [...post.upvotes, postId], // Add upvote
-            }
-          : post
-      )
-    );
-
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                upvotes: liked
+                  ? post.upvotes.filter((id) => id !== postId) // Remove upvote
+                  : [...post.upvotes, postId], // Add upvote
+              }
+            : post,
+        ),
+      );
     } catch (error) {
       console.error("Error toggling like:", error);
     }
@@ -100,7 +104,7 @@ export default function InfiniteScrollPosts({
     } else {
       // Fallback: copy URL to clipboard
       navigator.clipboard.writeText(
-        window.location.href + `/posts/${post._id}`
+        window.location.href + `/posts/${post._id}`,
       );
       alert("Post URL copied to clipboard");
     }
@@ -156,11 +160,11 @@ export default function InfiniteScrollPosts({
           <h2 className="text-md font-bold mb-1 mt-12">{post.title}</h2>
 
           {expandedPostIds.includes(post._id) ? (
-            <p className=" mb-2">{post.description}</p>
+            <p className="mb-2">{post.description}</p>
           ) : (
             <>
               {post.description.length > 100 ? (
-                <p className=" mb-2">
+                <p className="mb-2">
                   {post.description.slice(0, 100)}...
                   <button
                     className="text-blue-500 hover:underline ml-1"

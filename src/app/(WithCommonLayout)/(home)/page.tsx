@@ -1,7 +1,5 @@
 // import InfiniteScrollPosts from "@/src/components/post/newsfeedpost";
 
-
-
 // export default function Home() {
 //   return (
 //     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
@@ -11,10 +9,13 @@
 // }
 
 // Home.tsx
-import InfiniteScrollPosts from "@/src/components/post/newsfeedpost";
-import Footer from "@/src/components/UI/Footer";
+"use client";
 import { Button } from "@nextui-org/button";
 import Link from "next/link";
+
+import InfiniteScrollPosts from "@/src/components/post/newsfeedpost";
+import Footer from "@/src/components/UI/Footer";
+import { useUser } from "@/src/context/user.provider";
 
 const popularContent = [
   {
@@ -78,32 +79,61 @@ const popularContent = [
 const premiumContent = [
   {
     id: 1,
-    title: "Premium Item 1",
-    description: "Description for premium item 1.",
-    imageUrl: "https://via.placeholder.com/150", // Replace with actual image URL
+    title: "Top 10 Fruit Trees to Grow in Your Backyard",
+    description:
+      "A selection of the top 10 fruit trees that can thrive in your backyard,ffering delicious and nutritious fruits throughout the year......",
+    imageUrl:
+      "https://res.cloudinary.com/dwelabpll/image/upload/v1728741401/images_oeawhb.jpg",
   },
   {
     id: 2,
-    title: "Premium Item 2",
-    description: "Description for premium item 2.",
-    imageUrl: "https://via.placeholder.com/150", // Replace with actual image URL
+    title: "Best Herbs to Grow Indoors Year-Round",
+    description:
+      "Best Herbs to Grow Indoors Year-Round.Herbs are a great way to bring....",
+    imageUrl:
+      "https://res.cloudinary.com/dwelabpll/image/upload/v1727790344/1452850519201_egwhgj.jpg",
   },
   {
     id: 3,
-    title: "Premium Item 3",
-    description: "Description for premium item 2.",
-    imageUrl: "https://via.placeholder.com/150", // Replace with actual image URL
+    title: "Designing a Small Garden: Space-Saving Ideas",
+    description:
+      "Discover space-saving ideas for designing a beautiful and functional garden, no matter how small your outdoor space is....",
+    imageUrl:
+      "https://res.cloudinary.com/dwelabpll/image/upload/v1728740993/garden-design-Airedale_ra0cs5.jpg",
   },
 ];
 
 const users = [
-  { id: 1, name: "User 1", avatar: "https://via.placeholder.com/50" },
-  { id: 2, name: "User 2", avatar: "https://via.placeholder.com/50" },
-  { id: 3, name: "User 3", avatar: "https://via.placeholder.com/50" },
-  { id: 4, name: "User 4", avatar: "https://via.placeholder.com/50" },
+  {
+    id: 1,
+    name: "User 1",
+    avatar:
+      "https://res.cloudinary.com/dwelabpll/image/upload/v1727161761/portrait-young-indian-woman-happy-with-internship-human-resources-opportunity-mission-vision-company-values-goals-face-headshot-gen-z-pe_lsoixl.avif",
+  },
+  {
+    id: 2,
+    name: "User 2",
+    avatar:
+      "https://res.cloudinary.com/dwelabpll/image/upload/v1727162014/images_5_oyzjjc.jpg",
+  },
+  {
+    id: 3,
+    name: "User 3",
+    avatar:
+      "https://res.cloudinary.com/dwelabpll/image/upload/v1727161859/positive-mindset-positive-life-portrait-happy-young-woman-home_590464-22422_pxuwht.avif",
+  },
+  {
+    id: 4,
+    name: "User 4",
+    avatar:
+      "https://res.cloudinary.com/dwelabpll/image/upload/v1728742220/portrait-young-investor-banker-workplace-260nw-2364566447_pl4b4z.jpg",
+  },
 ];
 
 export default function Home() {
+  const { user } = useUser(); // Get the user context
+  const isVerified = user?.isVerified; // Check if the user is verified
+
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <div className="container mx-auto flex">
@@ -117,9 +147,9 @@ export default function Home() {
                 className="flex items-start p-4 bg-default-black shadow-sm rounded-lg"
               >
                 <img
-                  src={item.imageUrl}
                   alt={item.title}
                   className="w-20 h-20 rounded-md mr-4"
+                  src={item.imageUrl}
                 />
                 <div>
                   <h3 className="font-semibold">{item.title}</h3>
@@ -133,9 +163,9 @@ export default function Home() {
             {users.map((user) => (
               <img
                 key={user.id}
-                src={user.avatar}
                 alt={user.name}
                 className="w-10 h-10 rounded-full border-2 border-white shadow"
+                src={user.avatar}
                 title={user.name}
               />
             ))}
@@ -145,7 +175,7 @@ export default function Home() {
         {/* Middle Section - Infinite Scroll Content */}
         <main className="flex-1 mx-6 p-4 bg-default-black shadow-md rounded-lg ">
           <div className="item-center justify-center pl-52 pb-6">
-            <Link href="/postAction" passHref>
+            <Link passHref href="/postAction">
               <Button className="bg-purple-500 ">Go to postAction</Button>
             </Link>
           </div>
@@ -162,15 +192,28 @@ export default function Home() {
                 className="flex flex-col p-4 bg-default-black shadow-sm rounded-lg"
               >
                 <img
-                  src={item.imageUrl}
                   alt={item.title}
                   className="w-full h-32 rounded-md object-cover mb-2"
+                  src={item.imageUrl}
                 />
                 <h3 className="font-semibold">{item.title}</h3>
                 <p className="text-sm text-gray-600">{item.description}</p>
               </li>
             ))}
           </ul>
+          <div className="pl-20">
+            {/* Conditionally render the button based on verification status */}
+            {isVerified ? (
+              <Link passHref href="/profile/premiumContent">
+                <Button className="bg-purple-500 ">See Premium Content</Button>
+              </Link>
+            ) : (
+              <Link passHref href="/profile/verify-profile">
+                <Button className="bg-purple-500 ">Unlock</Button>
+              </Link>
+            )}
+          </div>
+
           <Footer />
         </aside>
       </div>

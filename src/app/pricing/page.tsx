@@ -1,6 +1,5 @@
 import { title } from "@/src/components/primitives";
 
-
 export default function PricingPage() {
   return (
     <div>

@@ -1,5 +1,3 @@
-
-
 // /* eslint-disable jsx-a11y/label-has-associated-control */
 // "use client"; // This directive makes this component a client component
 
@@ -121,15 +119,16 @@ import { useForm } from "react-hook-form";
 import { Input } from "@nextui-org/input";
 import { Checkbox } from "@nextui-org/checkbox";
 import { Spinner } from "@nextui-org/spinner";
+import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "@nextui-org/button";
+
 import { useCreatePost } from "@/src/hooks/post";
 import { useUser } from "@/src/context/user.provider";
-import { useQueryClient } from "@tanstack/react-query";
 // eslint-disable-next-line import/order
 
 import { uploadToCloudinary } from "@/src/utils/uploadToCloudinary";
 import { useGetMe } from "@/src/hooks/profile";
 import Editor from "@/src/components/UI/Editor/Editor";
-import { Button } from "@nextui-org/button";
 
 const CreatePost = () => {
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -147,6 +146,7 @@ const CreatePost = () => {
     e.preventDefault();
     if (e.target.files) {
       const image = URL.createObjectURL(e.target.files[0]);
+
       setImage(e.target.files[0]);
       setImagePreview(image);
     }
@@ -159,8 +159,10 @@ const CreatePost = () => {
       ...data,
       content,
     };
+
     if (image) {
       const imageUrl = await uploadToCloudinary(image as File, "image");
+
       postData.imageUrl = imageUrl;
     }
 
@@ -191,9 +193,9 @@ const CreatePost = () => {
         </div>
 
         <Editor
-          setUploadingImage={setUploadingImage}
           content={content}
           setContent={setContent}
+          setUploadingImage={setUploadingImage}
         />
         <div className="mt-5 space-y-3">
           <Input
@@ -208,11 +210,7 @@ const CreatePost = () => {
             name="category"
             type="text"
           />
-          <Input
-            onChange={handleImageChange}
-            name="imageUrl"
-            type="file"
-          />
+          <Input name="imageUrl" type="file" onChange={handleImageChange} />
           {imagePreview && (
             <div className="relative rounded-xl h-[300px] border-2 border-dashed border-default-300 p-2">
               <img
@@ -239,7 +237,7 @@ const CreatePost = () => {
         </div>
 
         <div className="mt-5">
-          <Button isLoading={loading} type="submit" color="primary">
+          <Button color="primary" isLoading={loading} type="submit">
             Create Post
           </Button>
         </div>

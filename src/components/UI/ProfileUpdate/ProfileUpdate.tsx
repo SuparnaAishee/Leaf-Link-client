@@ -1,17 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useUser } from "@/src/context/user.provider";
-import { useGetMe, useUpdateProfile } from "@/src/hooks/profile";
 import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation";
 import { ChangeEvent } from "react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
-import { uploadToCloudinary } from "@/src/utils/uploadToCloudinary";
-import { logout, getCurrentUser } from "@/src/services/AuthService";
 
 import LLInput from "../../form/LLInput";
 import LLForm from "../../form/LLFrom";
+
+import { uploadToCloudinary } from "@/src/utils/uploadToCloudinary";
+import { logout, getCurrentUser } from "@/src/services/AuthService";
+import { useUpdateProfile } from "@/src/hooks/profile";
+import { useUser } from "@/src/context/user.provider";
 
 // Define the User type
 interface User {
@@ -35,6 +36,7 @@ const ProfileUpdate = () => {
     const fetchCurrentUser = async () => {
       try {
         const currentUser = await getCurrentUser();
+
         // Assert the type if necessary
         setUser(currentUser as User); // Use type assertion here
       } catch (error) {
@@ -49,6 +51,7 @@ const ProfileUpdate = () => {
     // Set image preview when image files change
     if (imageFiles) {
       const reader = new FileReader();
+
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
       };
@@ -62,6 +65,7 @@ const ProfileUpdate = () => {
 
     if (imageFiles) {
       const imageUrl = await uploadToCloudinary(imageFiles, "image");
+
       payload.profilePhoto = imageUrl;
     }
 
@@ -80,6 +84,7 @@ const ProfileUpdate = () => {
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null; // Safely access the first file
+
     setImageFiles(file);
   };
 
@@ -103,24 +108,24 @@ const ProfileUpdate = () => {
               <h1 className="font-bold text-xl mb-2">Account Information </h1>
 
               <div className="mb-2">
-                <LLInput label="Name" type="text" name="name" />
+                <LLInput label="Name" name="name" type="text" />
               </div>
 
               <div className="mb-2">
                 <LLInput
                   label="Mobile Number"
-                  type="text"
                   name="mobileNumber"
+                  type="text"
                 />
               </div>
 
               <div className="mb-2">
                 <LLInput
-                  readOnly={true}
                   disabled={true}
                   label="Email"
-                  type="email"
                   name="email"
+                  readOnly={true}
+                  type="email"
                 />
               </div>
 

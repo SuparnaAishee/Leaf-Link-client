@@ -10,12 +10,11 @@ import {
 } from "react-icons/fa";
 import { Avatar } from "@nextui-org/avatar";
 import html2pdf from "html2pdf.js"; // Importing html2pdf
+import { toast } from "sonner";
 
 import { getCurrentUser } from "@/src/services/AuthService"; // Adjust path if needed
 import { TPost } from "@/src/types/post";
 import UpdatePost from "@/src/components/modal/UpdatePost";
-import { toast } from "sonner";
-
 
 const MyPostsPage = () => {
   const [posts, setPosts] = useState<TPost[]>([]);
@@ -30,14 +29,17 @@ const MyPostsPage = () => {
   const fetchMyPosts = async () => {
     try {
       const user = await getCurrentUser();
+
       if (!user || !user._id) {
         setError("User is not authenticated.");
+
         return;
       }
 
       const response = await axios.get(
-        `http://localhost:5000/api/posts/user/${user._id}`
+        `http://localhost:5000/api/posts/user/${user._id}`,
       );
+
       if (response.data.success) {
         setPosts(response.data.data);
       } else {
@@ -62,6 +64,7 @@ const MyPostsPage = () => {
   // Function to generate PDF
   const generatePDF = (postId: string) => {
     const postElement = document.getElementById(`post-${postId}`);
+
     if (!postElement) return;
 
     // Create a separate element for PDF content
@@ -122,13 +125,14 @@ const MyPostsPage = () => {
 
   const handleDeletePost = async (postId: string) => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this post?"
+      "Are you sure you want to delete this post?",
     );
+
     if (confirmed) {
       try {
         await axios.delete(`http://localhost:5000/api/posts/${postId}`);
         setPosts((prevPosts) =>
-          prevPosts.filter((post) => post._id !== postId)
+          prevPosts.filter((post) => post._id !== postId),
         );
         toast.success("Post deleted successfully!"); // Optional: Notify the user
       } catch (error) {
@@ -146,16 +150,16 @@ const MyPostsPage = () => {
         posts.map((post) => (
           <div
             key={post._id}
-            id={`post-${post._id}`} // Unique ID for each post
             className="bg-default-black text-default-white shadow-lg rounded-lg p-4 mb-6 border border-gray-400 max-w-xl w-full"
+            id={`post-${post._id}`} // Unique ID for each post
           >
             <div className="p-4 bg-default-black rounded-md">
               <div className="flex items-center mb-5">
                 <Avatar
-                  src={post.user.profilePhoto || "/default-avatar.png"}
                   alt={`${post.user.name}'s profile photo`}
-                  size="lg"
                   className="mr-4"
+                  size="lg"
+                  src={post.user.profilePhoto || "/default-avatar.png"}
                 />
                 <div>
                   <h4 className="font-bold">{post.user.name || "Anonymous"}</h4>
@@ -166,9 +170,9 @@ const MyPostsPage = () => {
               {post.imageUrl && (
                 <div className="mb-4">
                   <img
-                    src={post.imageUrl}
                     alt={post.title}
                     className="w-full h-56 object-cover rounded-lg"
+                    src={post.imageUrl}
                     style={{ objectFit: "cover" }}
                   />
                 </div>
@@ -181,12 +185,12 @@ const MyPostsPage = () => {
                   ? post.description
                   : `${post.description.substring(0, 100)}...`}{" "}
                 <button
+                  aria-expanded={expandedPosts[post._id] ? "true" : "false"}
                   className="text-blue-400 cursor-pointer focus:outline-none"
                   onClick={() => toggleExpand(post._id)}
                   onKeyPress={(e) =>
                     e.key === "Enter" && toggleExpand(post._id)
                   }
-                  aria-expanded={expandedPosts[post._id] ? "true" : "false"}
                 >
                   {expandedPosts[post._id] ? "See Less" : "See More"}
                 </button>
@@ -196,7 +200,7 @@ const MyPostsPage = () => {
                 <div className="flex items-center space-x-6 text-sm">
                   <div className="flex items-center space-x-1">
                     <FaHeart className="text-red-500" />
-                    <span>{post.likes ? post.likes.length : 0}</span>{" "}
+                    <span>{post.upvotes ? post.upvotes.length : 0}</span>{" "}
                     {/* Safely handle undefined likes */}
                   </div>
                   <div className="flex items-center space-x-1">
@@ -233,11 +237,11 @@ const MyPostsPage = () => {
 
       {showModal && selectedPost && (
         <UpdatePost
-          postId={selectedPost._id}
-          title={selectedPost.title}
           content={selectedPost.description}
           imageUrl={selectedPost.imageUrl}
+          postId={selectedPost._id}
           refreshPosts={fetchMyPosts} // Pass the refreshPosts function to UpdatePost
+          title={selectedPost.title}
           onClose={handleCloseModal}
         />
       )}

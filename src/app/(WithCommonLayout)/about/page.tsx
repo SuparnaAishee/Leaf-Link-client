@@ -1,4 +1,3 @@
-import ContactForm from "@/src/components/UI/contactus";
 import React from "react";
 import { FaSeedling, FaEye } from "react-icons/fa";
 const AboutPage = () => {
@@ -60,9 +59,9 @@ const AboutPage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
           <div className="bg-gray-50 rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
             <img
-              src="https://res.cloudinary.com/dwelabpll/image/upload/v1728055736/1620319892_kfgw3v.png"
               alt="Expert Tips"
               className="w-full h-48 object-cover"
+              src="https://res.cloudinary.com/dwelabpll/image/upload/v1728055736/1620319892_kfgw3v.png"
             />
             <div className="p-4">
               <h3 className="text-lg font-semibold text-purple-600">
@@ -77,9 +76,9 @@ const AboutPage = () => {
 
           <div className="bg-gray-50 rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
             <img
-              src="https://res.cloudinary.com/dwelabpll/image/upload/v1728055810/1605885676857_lpchdt.jpg"
               alt="Interactive Community"
               className="w-full h-48 object-cover"
+              src="https://res.cloudinary.com/dwelabpll/image/upload/v1728055810/1605885676857_lpchdt.jpg"
             />
             <div className="p-4">
               <h3 className="text-lg font-semibold text-purple-600">
@@ -94,9 +93,9 @@ const AboutPage = () => {
 
           <div className="bg-gray-50 rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
             <img
-              src="https://res.cloudinary.com/dwelabpll/image/upload/v1728055874/1621875021927_bmw9t9.jpg"
               alt="Rich Content Creation"
               className="w-full h-48 object-cover"
+              src="https://res.cloudinary.com/dwelabpll/image/upload/v1728055874/1621875021927_bmw9t9.jpg"
             />
             <div className="p-4">
               <h3 className="text-lg font-semibold text-purple-600">
@@ -111,9 +110,9 @@ const AboutPage = () => {
 
           <div className="bg-gray-50 rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
             <img
-              src="https://res.cloudinary.com/dwelabpll/image/upload/v1728055967/What-is-Premium-Content-1_z3bmoz.jpg"
               alt="Premium Content Access"
               className="w-full h-48 object-cover"
+              src="https://res.cloudinary.com/dwelabpll/image/upload/v1728055967/What-is-Premium-Content-1_z3bmoz.jpg"
             />
             <div className="p-4">
               <h3 className="text-lg font-semibold text-purple-600">
@@ -127,9 +126,9 @@ const AboutPage = () => {
 
           <div className="bg-gray-50 rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
             <img
-              src="https://res.cloudinary.com/dwelabpll/image/upload/v1728056034/user-interface-development-team-design-discussions-thumbnail_mq67dl.webp"
               alt="User-Friendly Interface"
               className="w-full h-48 object-cover"
+              src="https://res.cloudinary.com/dwelabpll/image/upload/v1728056034/user-interface-development-team-design-discussions-thumbnail_mq67dl.webp"
             />
             <div className="p-4">
               <h3 className="text-lg font-semibold text-purple-600">

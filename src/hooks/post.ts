@@ -1,10 +1,20 @@
 "use client";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { TPost, IResponse, IUpdateVote, IUser } from "../types";
-import { toast } from "sonner";
-import { addToBookmark, createPost, deletePost, getAllPost, getMyMyPosts, getSinglePost, getUpvotersForMyPosts, updatePost, upvoteOrDownvote } from "../services/post";
+import {
+  addToBookmark,
+  createPost,
+  deletePost,
+  getAllPost,
+  getMyMyPosts,
+  getSinglePost,
+  getUpvotersForMyPosts,
+  updatePost,
+  upvoteOrDownvote,
+} from "../services/post";
 
 interface IPostProps {
   message: string;

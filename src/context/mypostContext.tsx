@@ -26,6 +26,7 @@ export const PostsProvider: React.FC<PostsProviderProps> = ({ children }) => {
   const fetchPosts = async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/posts");
+
       setPosts(response.data);
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -46,8 +47,10 @@ export const PostsProvider: React.FC<PostsProviderProps> = ({ children }) => {
 // Create a custom hook for easier access
 export const usePosts = () => {
   const context = useContext(PostsContext);
+
   if (!context) {
     throw new Error("usePosts must be used within a PostsProvider");
   }
+
   return context;
 };

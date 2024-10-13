@@ -44,7 +44,7 @@ const UpdatePost: React.FC<UpdatePostProps> = ({
           title: updatedTitle,
           content: updatedContent,
           imageUrl: updatedImageUrl,
-        }
+        },
       );
 
       // If the response is successful, only then trigger the success toast
@@ -78,53 +78,53 @@ const UpdatePost: React.FC<UpdatePostProps> = ({
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Title:</label>
             <input
+              required
+              className="w-full border rounded px-3 py-2"
               type="text"
               value={updatedTitle}
               onChange={(e) => setUpdatedTitle(e.target.value)}
-              className="w-full border rounded px-3 py-2"
-              required
             />
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Content:</label>
             <textarea
-              value={updatedContent}
-              onChange={(e) => setUpdatedContent(e.target.value)}
+              required
               className="w-full border rounded px-3 py-2"
               rows={4}
-              required
+              value={updatedContent}
+              onChange={(e) => setUpdatedContent(e.target.value)}
             />
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Image URL:</label>
             <input
+              className="w-full border rounded px-3 py-2"
               type="text"
               value={updatedImageUrl}
               onChange={(e) => setUpdatedImageUrl(e.target.value)}
-              className="w-full border rounded px-3 py-2"
             />
           </div>
           {updatedImageUrl && (
             <div className="mb-4">
               <img
-                src={updatedImageUrl}
                 alt="Post preview"
                 className="w-full h-32 object-cover rounded-lg"
+                src={updatedImageUrl}
               />
             </div>
           )}
           <div className="flex justify-end">
             <button
+              className="bg-red-500 text-white px-4 py-2 rounded mr-2"
               type="button"
               onClick={onClose}
-              className="bg-red-500 text-white px-4 py-2 rounded mr-2"
             >
               Close
             </button>
             <button
-              type="submit"
               className="bg-blue-500 text-white px-4 py-2 rounded"
               disabled={loading} // Disable button while loading
+              type="submit"
             >
               {loading ? "Updating..." : "Update Post"}
             </button>

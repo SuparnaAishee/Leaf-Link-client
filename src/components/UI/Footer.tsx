@@ -6,22 +6,22 @@ const Footer = () => {
   return (
     <footer className="w-full text-center p-4 bg-default-black text-gray-600 mt-6">
       <div className="space-x-4 mb-2">
-        <Link href="/" className="hover:underline">
+        <Link className="hover:underline" href="/">
           Home
         </Link>
-        <Link href="/about" className="hover:underline">
+        <Link className="hover:underline" href="/about">
           About
         </Link>
-        <Link href="/profile/create-post" className="hover:underline">
+        <Link className="hover:underline" href="/profile/create-post">
           Create Post
         </Link>
-        <Link href="/profile" className="hover:underline">
+        <Link className="hover:underline" href="/profile">
           Profile
         </Link>
       </div>
       <p>
-        &copy; 2024 <span className="text-purple-500 ">LeafLink</span>.
-        All rights reserved.
+        &copy; 2024 <span className="text-purple-500 ">LeafLink</span>. All
+        rights reserved.
       </p>
     </footer>
   );

@@ -20,7 +20,6 @@ export const siteConfig = {
       label: "SearchUser",
       href: "/profile/searchUser",
     },
-  
   ],
   navMenuItems: [
     {

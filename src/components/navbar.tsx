@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -8,24 +8,22 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@nextui-org/navbar";
-import { Kbd } from "@nextui-org/kbd";
 import { Link } from "@nextui-org/link";
 import { Input } from "@nextui-org/input";
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 
+import { useUser } from "../context/user.provider";
+
+import NavbarDropDown from "./UI/NavbarDropDown";
+
 import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/theme-switch";
 import { SearchIcon } from "@/src/components/icons";
 
-import NavbarDropDown from "./UI/NavbarDropDown";
-import { useUser } from "../context/user.provider";
-
-
 export const Navbar = () => {
-
-   const { user } = useUser();
+  const { user } = useUser();
   const searchInput = (
     <Input
       aria-label="Search"
@@ -61,7 +59,7 @@ export const Navbar = () => {
               <NextLink
                 className={clsx(
                   linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium"
+                  "data-[active=true]:text-primary data-[active=true]:font-medium",
                 )}
                 color="foreground"
                 href={item.href}
@@ -86,11 +84,10 @@ export const Navbar = () => {
           </NavbarItem>
         ) : (
           <NavbarItem className="hidden sm:flex gap-2">
-           <Link href="/login">Login</Link>
+            <Link href="/login">Login</Link>
           </NavbarItem>
         )}
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
-        
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
