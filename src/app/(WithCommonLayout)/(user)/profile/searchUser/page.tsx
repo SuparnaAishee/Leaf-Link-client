@@ -18,9 +18,12 @@ const SearchUserPage = () => {
     setError("");
 
     try {
-      const { data } = await axios.get("http://localhost:5000/api/users", {
-        params: { searchTerm: searchQuery, page: 1, limit: 10 }, // Include page and limit if needed
-      });
+      const { data } = await axios.get(
+        "https://gardening-tips-platform-server-three.vercel.app/api/users",
+        {
+          params: { searchTerm: searchQuery, page: 1, limit: 10 }, // Include page and limit if needed
+        }
+      );
 
       console.log("API Response:", data); // Log the entire response for debugging
 
@@ -51,7 +54,7 @@ const SearchUserPage = () => {
 
       // Send the follow/unfollow request, including credentials (cookies)
       const response = await axios.post(
-        "http://localhost:5000/api/follow",
+        "https://gardening-tips-platform-server-three.vercel.app/api/follow",
         {
           userId: currentUser._id,
           followingId: userId,
@@ -167,7 +170,7 @@ export default SearchUserPage;
 //     setError("");
 
 //     try {
-//       const { data } = await axios.get("http://localhost:5000/api/users", {
+//       const { data } = await axios.get("https://gardening-tips-platform-server-three.vercel.app/api/users", {
 //         params: { searchTerm: searchQuery, page: 1, limit: 10 }, // Include page and limit if needed
 //       });
 
@@ -193,7 +196,7 @@ export default SearchUserPage;
 //   //   setLoading(true); // Set loading state
 
 //   //   try {
-//   //     const response = await axios.put("http://localhost:5000/api/follow", {
+//   //     const response = await axios.put("https://gardening-tips-platform-server-three.vercel.app/api/follow", {
 //   //       followingId: userId,
 //   //     });
 
@@ -217,7 +220,7 @@ export default SearchUserPage;
 //   setLoading(true);
 
 //   try {
-//     const response = await axios.post("http://localhost:5000/api/follow", {
+//     const response = await axios.post("https://gardening-tips-platform-server-three.vercel.app/api/follow", {
 //       followingId: userId,
 
 //     });

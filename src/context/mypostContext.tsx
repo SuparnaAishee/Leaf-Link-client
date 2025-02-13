@@ -25,7 +25,9 @@ export const PostsProvider: React.FC<PostsProviderProps> = ({ children }) => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/posts");
+      const response = await axios.get(
+        "https://gardening-tips-platform-server-three.vercel.app/api/posts"
+      );
 
       setPosts(response.data);
     } catch (error) {

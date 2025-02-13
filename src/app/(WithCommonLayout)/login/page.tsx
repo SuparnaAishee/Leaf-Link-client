@@ -47,14 +47,85 @@
 // };
 
 // export default LoginPage;
+////
+// "use client";
 
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import { Button } from "@nextui-org/button";
+// import Link from "next/link";
+// import { useRouter, useSearchParams } from "next/navigation";
+// import { useEffect } from "react";
+// import { FieldValues, SubmitHandler } from "react-hook-form";
+
+// import { loginValidationSchema } from "@/src/schemas/login.validation";
+// import { useUserLogin } from "@/src/hooks/auth.hook";
+// import { useUser } from "@/src/context/user.provider";
+// import LLInput from "@/src/components/form/LLInput";
+// import LLForm from "@/src/components/form/LLFrom";
+
+// const LoginPage = () => {
+//   const searchParams = useSearchParams();
+//   const router = useRouter();
+//   const { setIsLoading: userLoading } = useUser();
+
+//   const redirect = searchParams.get("redirect");
+//   const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
+//   const onSubmit: SubmitHandler<FieldValues> = (data) => {
+//     console.log(data);
+//     handleUserLogin(data);
+//     userLoading(true);
+//   };
+
+//   useEffect(() => {
+//     if (!isPending && isSuccess) {
+//       if (redirect) {
+//         router.push(redirect);
+//       } else {
+//         router.push("/");
+//       }
+//     }
+//   }, [isPending, isSuccess]);
+
+//   return (
+//     <div className="flex h-[calc(100vh-200px)] w-full flex-col items-center justify-center">
+//       <h3 className="my-2 text-2xl font-bold">Login with LeafLink</h3>
+//       <p className="mb-4">Welcome Back! Let&lsquo;s Get Started</p>
+//       <div className="w-[35%]">
+//         <LLForm
+//           resolver={zodResolver(loginValidationSchema)}
+//           onSubmit={onSubmit}
+//         >
+//           <div className="py-3">
+//             <LLInput label="Email" name="email" type="email" />
+//           </div>
+//           <div className="py-3">
+//             <LLInput label="Password" name="password" type="password" />
+//           </div>
+
+//           <Button
+//             className="my-3 w-full rounded-md bg-default-900 font-semibold text-default mt-4 bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 text-white hover:from-purple-400 hover:via-purple-500 hover:to-purple-600 transition duration-300"
+//             size="lg"
+//             type="submit"
+//           >
+//             Login
+//           </Button>
+//         </LLForm>
+//         <div className="text-center">
+//           Don&lsquo;t have account ? <Link href={"/register"}>Register</Link>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LoginPage;
 "use client";
 
+import { Suspense, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@nextui-org/button";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 
 import { loginValidationSchema } from "@/src/schemas/login.validation";
@@ -111,11 +182,19 @@ const LoginPage = () => {
           </Button>
         </LLForm>
         <div className="text-center">
-          Don&lsquo;t have account ? <Link href={"/register"}>Register</Link>
+          Don&lsquo;t have an account? <Link href={"/register"}>Register</Link>
         </div>
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+const LoginWithSuspense = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginPage />
+    </Suspense>
+  );
+};
+
+export default LoginWithSuspense;

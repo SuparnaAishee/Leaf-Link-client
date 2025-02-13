@@ -30,11 +30,13 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     //   setUser(user);
     //   setIsLoading(false);
     // };
+    
 
     if (user) {
+      // @ts-ignore
       setUser(user);
     } else {
-      setUser(null); // Handle the case where user is null
+      setUser(null); 
     }
     setIsLoading(false);
   };

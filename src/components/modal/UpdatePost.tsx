@@ -39,12 +39,12 @@ const UpdatePost: React.FC<UpdatePostProps> = ({
     try {
       // Make an API call to update the post
       const response = await axios.put(
-        `http://localhost:5000/api/posts/update-post/${postId}`,
+        `https://gardening-tips-platform-server-three.vercel.app/api/posts/update-post/${postId}`,
         {
           title: updatedTitle,
           content: updatedContent,
           imageUrl: updatedImageUrl,
-        },
+        }
       );
 
       // If the response is successful, only then trigger the success toast
@@ -173,7 +173,7 @@ export default UpdatePost;
 //       }
 
 //       const response = await axios.get(
-//         `http://localhost:5000/api/posts/user/${user._id}`
+//         `https://gardening-tips-platform-server-three.vercel.app/api/posts/user/${user._id}`
 //       );
 //       if (response.data.success) {
 //         setPosts(response.data.data);

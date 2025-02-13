@@ -136,6 +136,8 @@ const CreatePost = () => {
   const queryClient = useQueryClient();
   const [image, setImage] = useState<File>();
   const [imagePreview, setImagePreview] = useState("");
+  // @ts-ignore
+
   const { user, query } = useUser();
   const [content, setContent] = useState("");
   const { data: me } = useGetMe(user?.email as string);

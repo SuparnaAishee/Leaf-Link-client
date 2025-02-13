@@ -17,7 +17,9 @@ export default function PostsPage() {
   useEffect(() => {
     const checkUserStatus = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/user/status"); // Endpoint to check user status
+        const res = await fetch(
+          "https://gardening-tips-platform-server-three.vercel.app/api/user/status"
+        ); // Endpoint to check user status
 
         if (!res.ok) {
           throw new Error("Failed to fetch user status");
@@ -36,7 +38,9 @@ export default function PostsPage() {
   const fetchPosts = async (searchQuery = "", categoryQuery = "") => {
     try {
       setLoading(true);
-      const url = new URL(`http://localhost:5000/api/posts`);
+      const url = new URL(
+        `https://gardening-tips-platform-server-three.vercel.app/api/posts`
+      );
 
       if (searchQuery) url.searchParams.append("searchTerm", searchQuery);
       if (categoryQuery) url.searchParams.append("category", categoryQuery);
@@ -81,14 +85,15 @@ export default function PostsPage() {
     const liked = likedPosts.includes(postId);
 
     try {
-      await fetch(`http://localhost:5000/api/posts/${postId}/upvote`, {
-        method: liked ? "DELETE" : "POST",
-      });
+      await fetch(
+        `https://gardening-tips-platform-server-three.vercel.app/api/posts/${postId}/upvote`,
+        {
+          method: liked ? "DELETE" : "POST",
+        }
+      );
 
       setLikedPosts((prevLiked) =>
-        liked
-          ? prevLiked.filter((id) => id !== postId)
-          : [...prevLiked, postId],
+        liked ? prevLiked.filter((id) => id !== postId) : [...prevLiked, postId]
       );
 
       setPosts((prevPosts) =>
@@ -100,8 +105,8 @@ export default function PostsPage() {
                   ? post.upvotes.filter((id) => id !== postId)
                   : [...post.upvotes, postId],
               }
-            : post,
-        ),
+            : post
+        )
       );
     } catch (error) {
       console.error("Error toggling like:", error);
@@ -120,7 +125,7 @@ export default function PostsPage() {
         .catch((error) => console.error("Error sharing post:", error));
     } else {
       navigator.clipboard.writeText(
-        window.location.href + `/posts/${post._id}`,
+        window.location.href + `/posts/${post._id}`
       );
       alert("Post URL copied to clipboard");
     }
@@ -268,7 +273,7 @@ export default function PostsPage() {
 //   useEffect(() => {
 //     const checkUserStatus = async () => {
 //       try {
-//         const res = await fetch("http://localhost:5000/api/user/status"); // Endpoint to check user status
+//         const res = await fetch("https://gardening-tips-platform-server-three.vercel.app/api/user/status"); // Endpoint to check user status
 //         if (!res.ok) {
 //           throw new Error("Failed to fetch user status");
 //         }
@@ -285,7 +290,7 @@ export default function PostsPage() {
 //   const fetchPosts = async (searchQuery = "", categoryQuery = "") => {
 //     try {
 //       setLoading(true);
-//       const url = new URL(`http://localhost:5000/api/posts`);
+//       const url = new URL(`https://gardening-tips-platform-server-three.vercel.app/api/posts`);
 //       if (searchQuery) url.searchParams.append("searchTerm", searchQuery);
 //       if (categoryQuery) url.searchParams.append("category", categoryQuery);
 
@@ -324,7 +329,7 @@ export default function PostsPage() {
 //     const liked = likedPosts.includes(postId);
 
 //     try {
-//       await fetch(`http://localhost:5000/api/posts/${postId}/upvote`, {
+//       await fetch(`https://gardening-tips-platform-server-three.vercel.app/api/posts/${postId}/upvote`, {
 //         method: liked ? "DELETE" : "POST",
 //       });
 

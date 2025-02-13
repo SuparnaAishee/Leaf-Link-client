@@ -6,6 +6,7 @@ const nextConfig = {
       "cdn.pixabay.com", // Allow images from Pixabay
     ],
   },
+  reactStrictMode: true, // Enable React's strict mode for additional checks
 };
 
 module.exports = nextConfig;

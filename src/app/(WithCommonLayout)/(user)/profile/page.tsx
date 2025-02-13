@@ -1,15 +1,8 @@
 "use client"; // Keep this if you are using client-side components
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  FaHeart,
-  FaRegComment,
-  FaEdit,
-  FaTrash,
-  FaFilePdf,
-} from "react-icons/fa";
+import { FaHeart, FaRegComment, FaEdit, FaTrash } from "react-icons/fa";
 import { Avatar } from "@nextui-org/avatar";
-import html2pdf from "html2pdf.js"; // Importing html2pdf
 import { toast } from "sonner";
 
 import { getCurrentUser } from "@/src/services/AuthService"; // Adjust path if needed
@@ -32,12 +25,11 @@ const MyPostsPage = () => {
 
       if (!user || !user._id) {
         setError("User is not authenticated.");
-
         return;
       }
 
       const response = await axios.get(
-        `http://localhost:5000/api/posts/user/${user._id}`,
+        `https://gardening-tips-platform-server-three.vercel.app/api/posts/user/${user._id}`
       );
 
       if (response.data.success) {
@@ -61,55 +53,6 @@ const MyPostsPage = () => {
     }));
   };
 
-  // Function to generate PDF
-  const generatePDF = (postId: string) => {
-    const postElement = document.getElementById(`post-${postId}`);
-
-    if (!postElement) return;
-
-    // Create a separate element for PDF content
-    const pdfContent = document.createElement("div");
-
-    // Prepare the inner HTML with styles and content
-    const title = postElement.querySelector("h3")?.innerText || "No Title";
-    const description =
-      postElement.querySelector("p")?.innerText || "No Description";
-    const imageUrl = postElement.querySelector("img")?.src || ""; // Get the image source
-
-    pdfContent.innerHTML = `
-      <div style="font-family: Arial, sans-serif; color: black; padding: 20px;">
-        <h3 style="margin: 0;">${title}</h3>
-        ${imageUrl ? `<img src="${imageUrl}" style="width:100%; height:auto; margin-bottom: 15px;"/>` : ""}
-        <p style="margin: 0;">${description}</p>
-      </div>
-    `;
-
-    // Append the pdfContent to the body for rendering
-    document.body.appendChild(pdfContent);
-
-    const options = {
-      margin: 0.5,
-      filename: `${postId}.pdf`,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-    };
-
-    // Generate PDF from the created content
-    html2pdf()
-      .from(pdfContent)
-      .set(options)
-      .save()
-      .then(() => {
-        console.log("PDF generated successfully");
-        // Remove pdfContent after generation
-        document.body.removeChild(pdfContent);
-      })
-      .catch((err: any) => {
-        console.error("Error generating PDF:", err);
-      });
-  };
-
   // Function to open the UpdatePost modal and pass the selected post
   const handleEditPost = (post: TPost) => {
     setSelectedPost(post);
@@ -125,14 +68,16 @@ const MyPostsPage = () => {
 
   const handleDeletePost = async (postId: string) => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this post?",
+      "Are you sure you want to delete this post?"
     );
 
     if (confirmed) {
       try {
-        await axios.delete(`http://localhost:5000/api/posts/${postId}`);
+        await axios.delete(
+          `https://gardening-tips-platform-server-three.vercel.app/api/posts/${postId}`
+        );
         setPosts((prevPosts) =>
-          prevPosts.filter((post) => post._id !== postId),
+          prevPosts.filter((post) => post._id !== postId)
         );
         toast.success("Post deleted successfully!"); // Optional: Notify the user
       } catch (error) {
@@ -221,11 +166,6 @@ const MyPostsPage = () => {
                     title="Delete Post"
                     onClick={() => handleDeletePost(post._id)} // Call delete handler
                   />
-                  <FaFilePdf
-                    className="cursor-pointer text-green-500"
-                    title="Download PDF"
-                    onClick={() => generatePDF(post._id)} // Call PDF generation function
-                  />
                 </div>
               </div>
             </div>
@@ -287,7 +227,7 @@ export default MyPostsPage;
 //       }
 
 //       const response = await axios.get(
-//         `http://localhost:5000/api/posts/user/${user._id}`
+//         `https://gardening-tips-platform-server-three.vercel.app/api/posts/user/${user._id}`
 //       );
 //       if (response.data.success) {
 //         setPosts(response.data.data);

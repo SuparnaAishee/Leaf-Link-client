@@ -35,6 +35,8 @@ const UpdatePost = ({ postId, setPostId }: IProps) => {
   const queryClient = useQueryClient();
   const [showModal, setShowModal] = useShowUpdatePostModal();
   const [image, setImage] = useState<File>();
+  // @ts-ignore
+
   const { query, user } = useUser();
   const { data: me } = useGetMe(user?.email as string);
   const [content, setContent] = useState(``);
@@ -77,9 +79,11 @@ const UpdatePost = ({ postId, setPostId }: IProps) => {
       },
     });
   };
+ 
 
   useEffect(() => {
     if (singlePost?.data) {
+      // @ts-ignore
       setContent(singlePost?.data?.content);
       reset({
         title: singlePost?.data?.title,

@@ -24,7 +24,7 @@
 //       setLoading(true);
 
 //       // Construct the URL with both search and category parameters
-//       const url = new URL(`http://localhost:5000/api/posts`);
+//       const url = new URL(`https://gardening-tips-platform-server-three.vercel.app/api/posts`);
 
 //       if (searchQuery) url.searchParams.append("searchTerm", searchQuery); // Append search term
 //       if (categoryQuery) url.searchParams.append("category", categoryQuery); // Append category filter
@@ -69,7 +69,7 @@
 //     const liked = likedPosts.includes(postId);
 
 //     try {
-//       await fetch(`http://localhost:5000/api/posts/vote`, {
+//       await fetch(`https://gardening-tips-platform-server-three.vercel.app/api/posts/vote`, {
 //         method: liked ? "DELETE" : "POST", // Send POST to like, DELETE to unlike
 //       });
 
@@ -147,7 +147,7 @@
 //     if (!comment) return; // Don't submit empty comments
 
 //     try {
-//       await fetch(`http://localhost:5000/api/posts/add-comment`, {
+//       await fetch(`https://gardening-tips-platform-server-three.vercel.app/api/posts/add-comment`, {
 //         method: "POST",
 //         headers: {
 //           "Content-Type": "application/json",
@@ -362,7 +362,9 @@ export default function PostsPage() {
       setLoading(true);
 
       // Construct the URL with both search and category parameters
-      const url = new URL(`http://localhost:5000/api/posts`);
+      const url = new URL(
+        `https://gardening-tips-platform-server-three.vercel.app/api/posts`
+      );
 
       if (searchQuery) url.searchParams.append("searchTerm", searchQuery); // Append search term
       if (categoryQuery) url.searchParams.append("category", categoryQuery); // Append category filter
@@ -412,9 +414,12 @@ export default function PostsPage() {
     const liked = likedPosts.includes(postId);
 
     try {
-      await fetch(`http://localhost:5000/api/posts/${postId}/upvote`, {
-        method: liked ? "DELETE" : "POST", // Send POST to like, DELETE to unlike
-      });
+      await fetch(
+        `https://gardening-tips-platform-server-three.vercel.app/api/posts/${postId}/upvote`,
+        {
+          method: liked ? "DELETE" : "POST", // Send POST to like, DELETE to unlike
+        }
+      );
 
       setLikedPosts((prevLiked) =>
         liked
@@ -493,7 +498,7 @@ export default function PostsPage() {
         >
           <option value="">Select Category</option>
           <option value="plant health">Plant Health</option>
-          <option value="landscaping">Vegetables</option>
+
           <option value="herbs">Herbs</option>
           <option value="soil health">Soil Health</option>
           <option value="techniques">Techniques</option>
@@ -502,6 +507,7 @@ export default function PostsPage() {
           <option value="care tips">Care Tips</option>
           <option value="indoor gardening">Indoor Gardening</option>
           <option value="fruit gardening">Fruit Gardening</option>
+          {/* <option value="landscaping">Vegetables</option> */}
           {/* Add more categories as needed */}
         </select>
       </div>

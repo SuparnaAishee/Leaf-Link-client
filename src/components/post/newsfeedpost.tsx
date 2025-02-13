@@ -23,7 +23,7 @@ export default function InfiniteScrollPosts({
   const fetchPosts = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/posts?page=${page}&category=${selectedCategory}`,
+        `https://gardening-tips-platform-server-three.vercel.app/api/posts?page=${page}&category=${selectedCategory}`
       );
 
       if (!res.ok) {
@@ -62,9 +62,12 @@ export default function InfiniteScrollPosts({
     const liked = likedPosts.includes(postId);
 
     try {
-      await fetch(`http://localhost:5000/api/posts/${postId}/upvote`, {
-        method: liked ? "DELETE" : "POST", // Send POST to like, DELETE to unlike
-      });
+      await fetch(
+        `https://gardening-tips-platform-server-three.vercel.app/api/posts/${postId}/upvote`,
+        {
+          method: liked ? "DELETE" : "POST", // Send POST to like, DELETE to unlike
+        }
+      );
 
       setLikedPosts((prevLiked) =>
         liked

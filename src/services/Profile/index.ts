@@ -5,8 +5,8 @@ import { FieldValues } from "react-hook-form";
 export const updateProfile = async (payload: FieldValues) => {
   try {
     const { data }: any = await axios.put(
-      "http://localhost:5000/api/profile/update",
-      payload,
+      "https://gardening-tips-platform-server-three.vercel.app/api/profile/update",
+      payload
     ); // Axios put request
 
     if (data?.success) {

@@ -124,7 +124,7 @@ const ProfileUpdate = () => {
                   disabled={true}
                   label="Email"
                   name="email"
-                  readOnly={true}
+                  readonly={true}
                   type="email"
                 />
               </div>

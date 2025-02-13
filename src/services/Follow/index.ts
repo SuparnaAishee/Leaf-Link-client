@@ -11,8 +11,8 @@ export type FollowPayload = {
 export const followUser = async (payload: FollowPayload) => {
   try {
     const { data } = await axios.post(
-      "http://localhost:5000/api/follow",
-      payload,
+      "https://gardening-tips-platform-server-three.vercel.app/api/follow",
+      payload
     );
 
     console.log(data);

@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+// @ts-nocheck
 "use client";
 
 import { usePDF } from "react-to-pdf";
@@ -29,6 +30,7 @@ const PostCard = ({ post }: { post: TPost }) => {
   const { toPDF, targetRef } = usePDF({ filename: "post.pdf" });
   const router = useRouter();
   const queryClient = useQueryClient();
+  // @ts-ignore
   const { user, query } = useUser();
   const { data } = useGetMe(user?.email as string);
   const { mutate: handleAddVote } = useAddVote();

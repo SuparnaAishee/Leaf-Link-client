@@ -6,7 +6,9 @@ import { ICommentPayload } from "@/src/types/comment";
 
 // Base axios instance for handling API requests
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000", // replace with your base API URL
+  baseURL:
+    process.env.NEXT_PUBLIC_API_URL ||
+    "https://gardening-tips-platform-server-three.vercel.app", // replace with your base API URL
   headers: {
     "Content-Type": "application/json",
   },
@@ -17,7 +19,7 @@ export const addComment = async (payload: ICommentPayload) => {
   try {
     const { data }: any = await axiosInstance.post(
       `/comments/add-comment`,
-      payload,
+      payload
     );
 
     return data;
@@ -56,7 +58,7 @@ export const editComment = async (payload: {
   try {
     const { data }: any = await axiosInstance.put(
       `/comments/edit-comment/${payload.id}`,
-      payload.data,
+      payload.data
     );
 
     return data;
@@ -78,7 +80,7 @@ export const deleteComment = async (id: string) => {
 
 // import axios from "axios";
 
-// const API_URL = "http://localhost:5000/api/comments";
+// const API_URL = "https://gardening-tips-platform-server-three.vercel.app/api/comments";
 
 // export const addComment = async (
 //   postId: string,

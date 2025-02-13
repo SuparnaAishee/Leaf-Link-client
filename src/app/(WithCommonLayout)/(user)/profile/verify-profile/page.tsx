@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import { Button } from "@nextui-org/button";
@@ -23,13 +25,16 @@ const VerifyProfile = () => {
 
     try {
       // Initiating payment by sending payload to the backend
-      const response = await fetch("http://localhost:5000/api/verify-profile", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        "https://gardening-tips-platform-server-three.vercel.app/api/verify-profile",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       const data = await response.json(); // Parse the response JSON
 
@@ -44,16 +49,19 @@ const VerifyProfile = () => {
           window.location.href = paymentUrl;
 
           // After successful payment, update the user status in the backend
-          await fetch(`http://localhost:5000/api/update-user/${user?._id}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              isVerified: true, // Update the isVerified status
-              premiumStatus: true, // Update the premiumStatus
-            }),
-          });
+          await fetch(
+            `https://gardening-tips-platform-server-three.vercel.app/api/users/update-user/${user?._id}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                isVerified: true, // Update the isVerified status
+                premiumStatus: true, // Update the premiumStatus
+              }),
+            }
+          );
 
           // Update the user state on the frontend after the backend update
           // @ts-ignore
