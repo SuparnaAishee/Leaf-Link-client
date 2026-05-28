@@ -9,6 +9,7 @@ import {
   deleteComment,
   editComment,
   getAllComments,
+  getCommentsByPost,
   getSingleComment,
 } from "../services/comment";
 
@@ -75,5 +76,13 @@ export const useDeleteComment = () => {
     onError: (error) => {
       toast.error(error.message);
     },
+  });
+};
+
+export const useGetCommentsByPost = (postId: string) => {
+  return useQuery<any, Error, ICommentResponse>({
+    queryKey: ["get_comments_by_post", postId],
+    enabled: !!postId,
+    queryFn: async () => await getCommentsByPost(postId),
   });
 };

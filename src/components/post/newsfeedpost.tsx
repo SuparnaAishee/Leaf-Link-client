@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useUser } from "@/src/context/user.provider";
 import { useAddVote } from "@/src/hooks/post";
+import PostComments from "./PostComments";
 
 const extractId = (entry: unknown): string | null => {
   if (!entry) return null;
@@ -61,10 +62,19 @@ export default function InfiniteScrollPosts({
   const [expandedPostIds, setExpandedPostIds] = useState<string[]>([]);
   const [savedPosts, setSavedPosts] = useState<string[]>([]);
   const [showComments, setShowComments] = useState<string[]>([]);
-  const [commentText, setCommentText] = useState<{ [key: string]: string }>({});
   const [showHeartAnimation, setShowHeartAnimation] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const lastTapRef = useRef<{ [key: string]: number }>({});
+
+  const bumpCommentCount = (postId: string) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post._id === postId
+          ? { ...post, comments: [...(post.comments || []), "new"] }
+          : post,
+      ),
+    );
+  };
 
   useEffect(() => {
     setPosts([]);
@@ -504,48 +514,10 @@ export default function InfiniteScrollPosts({
 
             {/* Comments Section */}
             {showingComments && (
-              <div className="px-4 pb-4 border-t border-gray-100 dark:border-gray-700">
-                <div className="pt-3">
-                  {/* Sample Comments */}
-                  {post.comments && post.comments.length > 0 ? (
-                    <div className="space-y-3 mb-3">
-                      <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wide">
-                        {post.comments.length} comment{post.comments.length !== 1 ? "s" : ""}
-                      </p>
-                    </div>
-                  ) : (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-3">
-                      No comments yet. Be the first!
-                    </p>
-                  )}
-
-                  {/* Comment Input */}
-                  <div className="flex items-center gap-3 pt-2 border-t border-gray-100 dark:border-gray-700">
-                    <input
-                      type="text"
-                      placeholder="Add a comment..."
-                      value={commentText[post._id] || ""}
-                      onChange={(e) =>
-                        setCommentText((prev) => ({
-                          ...prev,
-                          [post._id]: e.target.value,
-                        }))
-                      }
-                      className="flex-1 bg-transparent text-sm focus:outline-none text-gray-700 dark:text-gray-300 placeholder-gray-400"
-                    />
-                    <button
-                      className={`text-sm font-semibold transition-colors ${
-                        commentText[post._id]
-                          ? 'text-green-600 dark:text-green-400 hover:text-green-700'
-                          : 'text-green-300 dark:text-green-800 cursor-not-allowed'
-                      }`}
-                      disabled={!commentText[post._id]}
-                    >
-                      Post
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <PostComments
+                postId={post._id}
+                onCommentAdded={() => bumpCommentCount(post._id)}
+              />
             )}
           </article>
         );
