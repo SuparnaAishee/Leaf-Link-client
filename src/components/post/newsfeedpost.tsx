@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useUser } from "@/src/context/user.provider";
 import { useAddVote } from "@/src/hooks/post";
+import { useFollowUnfollow } from "@/src/hooks/follow";
 import PostComments from "./PostComments";
 
 const extractId = (entry: unknown): string | null => {
@@ -55,6 +56,10 @@ export default function InfiniteScrollPosts({
   const router = useRouter();
   const { user } = useUser();
   const { mutate: castVote } = useAddVote();
+  const { mutate: toggleFollow } = useFollowUnfollow();
+  const [followOverrides, setFollowOverrides] = useState<
+    Record<string, boolean>
+  >({});
   const [posts, setPosts] = useState<TPost[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -187,6 +192,37 @@ export default function InfiniteScrollPosts({
     lastTapRef.current[postId] = now;
   };
 
+  const isFollowingAuthor = (authorId?: string) => {
+    if (!authorId) return false;
+    if (authorId in followOverrides) return followOverrides[authorId];
+    return (user?.following || []).some(
+      (entry: any) =>
+        (typeof entry === "string" ? entry : entry?._id) === authorId,
+    );
+  };
+
+  const handleToggleFollow = (authorId?: string) => {
+    if (!authorId) return;
+    if (!user?._id) {
+      toast.error("Please log in to follow people");
+      router.push("/login");
+      return;
+    }
+    if (authorId === user._id) return;
+
+    const wasFollowing = isFollowingAuthor(authorId);
+    setFollowOverrides((prev) => ({ ...prev, [authorId]: !wasFollowing }));
+
+    toggleFollow(
+      { followingId: authorId },
+      {
+        onError: () => {
+          setFollowOverrides((prev) => ({ ...prev, [authorId]: wasFollowing }));
+        },
+      },
+    );
+  };
+
   const handleCopyLink = (postId: string) => {
     navigator.clipboard.writeText(`${window.location.origin}/posts/${postId}`);
     setOpenMenu(null);
@@ -308,6 +344,10 @@ export default function InfiniteScrollPosts({
         const userPhoto = typeof post.user === "string" ? null : post.user.profilePhoto;
         const isVerified = typeof post.user !== "string" && post.user.isVerified;
         const isMenuOpen = openMenu === post._id;
+        const authorId =
+          typeof post.user === "string" ? undefined : post.user._id;
+        const canFollow = !!authorId && authorId !== user?._id;
+        const isFollowing = canFollow && isFollowingAuthor(authorId);
 
         return (
           <article
@@ -335,12 +375,29 @@ export default function InfiniteScrollPosts({
                   )}
                 </Link>
                 <div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <Link href={`/profile`}>
                       <h3 className="font-semibold text-gray-900 dark:text-white hover:text-green-600 dark:hover:text-green-400 transition-colors text-sm">
                         {userName}
                       </h3>
                     </Link>
+                    {canFollow && (
+                      <>
+                        <span className="text-gray-300 dark:text-gray-600 text-xs">·</span>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleFollow(authorId)}
+                          className={`text-xs font-semibold transition-colors ${
+                            isFollowing
+                              ? "text-gray-500 dark:text-gray-400 hover:text-red-500"
+                              : "text-green-600 dark:text-green-400 hover:text-green-700"
+                          }`}
+                          aria-label={isFollowing ? "Unfollow" : "Follow"}
+                        >
+                          {isFollowing ? "Following" : "Follow"}
+                        </button>
+                      </>
+                    )}
                     {post.category && (
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${getCategoryColor(post.category)}`}>
                         {post.category}
@@ -374,10 +431,18 @@ export default function InfiniteScrollPosts({
                       <Bookmark className="w-4 h-4" />
                       Save post
                     </button>
-                    <button className="w-full px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3">
-                      <UserMinus className="w-4 h-4" />
-                      Unfollow
-                    </button>
+                    {canFollow && (
+                      <button
+                        onClick={() => {
+                          handleToggleFollow(authorId);
+                          setOpenMenu(null);
+                        }}
+                        className="w-full px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
+                      >
+                        <UserMinus className="w-4 h-4" />
+                        {isFollowing ? "Unfollow" : "Follow"} {userName}
+                      </button>
+                    )}
                     <hr className="my-1 border-gray-100 dark:border-gray-700" />
                     <button className="w-full px-4 py-2.5 text-left text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3">
                       <Flag className="w-4 h-4" />

@@ -1,20 +1,15 @@
 "use server";
 
-import axios from "axios";
 import { revalidateTag } from "next/cache";
-import envConfig from "@/src/config/envConfig";
+import axiosInstance from "@/src/lib/AxiosInstance";
 
 export type FollowPayload = {
   followingId: string;
-  followerId: string;
 };
 
 export const followUser = async (payload: FollowPayload) => {
   try {
-    const { data } = await axios.post(
-      `${envConfig.baseApi}/follow`,
-      payload
-    );
+    const { data } = await axiosInstance.post(`/follow`, payload);
 
     revalidateTag("user");
     return data;

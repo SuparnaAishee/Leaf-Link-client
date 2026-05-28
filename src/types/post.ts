@@ -6,8 +6,10 @@ export type TPost = {
   title: string;
   description: string;
   user: {
+    _id?: string;
     name: string;
     profilePhoto: string;
+    isVerified?: boolean;
   };
   imageUrl?: string; // optional
   category: string;
