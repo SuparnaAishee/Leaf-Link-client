@@ -7,9 +7,6 @@ import {
   MessageCircle,
   Share2,
   Bookmark,
-  MoreHorizontal,
-  Send,
-  ThumbsUp,
   Leaf,
   Clock,
   BookmarkCheck,
@@ -18,7 +15,6 @@ import {
   Link as LinkIcon,
   Flag,
   UserMinus,
-  Copy,
 } from "lucide-react";
 import { TPost } from "@/src/types/post";
 import envConfig from "@/src/config/envConfig";
@@ -30,6 +26,7 @@ import { useAddVote } from "@/src/hooks/post";
 import { useFollowUnfollow } from "@/src/hooks/follow";
 import PostComments from "./PostComments";
 import ShareModal from "./ShareModal";
+import PostSkeleton from "./PostSkeleton";
 
 const extractId = (entry: unknown): string | null => {
   if (!entry) return null;
@@ -89,6 +86,18 @@ export default function InfiniteScrollPosts({
     setHasMore(true);
     setIsLoading(true);
   }, [selectedCategory]);
+
+  useEffect(() => {
+    if (!openMenu) return;
+    const onClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest("[data-post-menu]")) {
+        setOpenMenu(null);
+      }
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, [openMenu]);
 
   useEffect(() => {
     fetchPosts();
@@ -280,9 +289,9 @@ export default function InfiniteScrollPosts({
   // Show loading state on initial load
   if (isLoading && posts.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
-        <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin mb-4" />
-        <p className="text-gray-500 dark:text-gray-400">Loading posts...</p>
+      <div className="space-y-4" aria-label="Loading posts">
+        <PostSkeleton />
+        <PostSkeleton />
       </div>
     );
   }
@@ -403,16 +412,19 @@ export default function InfiniteScrollPosts({
                   </div>
                 </div>
               </div>
-              <div className="relative">
+              <div className="relative" data-post-menu>
                 <button
                   onClick={() => setOpenMenu(isMenuOpen ? null : post._id)}
                   className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+                  aria-label="Post actions"
+                  aria-haspopup="menu"
+                  aria-expanded={isMenuOpen}
                 >
                   <MoreVertical className="w-5 h-5 text-gray-500" />
                 </button>
                 {/* Dropdown Menu */}
                 {isMenuOpen && (
-                  <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-1 z-10">
+                  <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-1 z-10" role="menu">
                     <button
                       onClick={() => handleCopyLink(post._id)}
                       className="w-full px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
@@ -502,72 +514,65 @@ export default function InfiniteScrollPosts({
             {/* Action Buttons - Instagram Style */}
             <div className="px-4 py-2">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1">
                   <button
                     onClick={() => toggleLike(post._id, true)}
-                    className="group"
+                    className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700/60 transition-colors group"
+                    aria-label={isLiked ? "Unlike" : "Like"}
+                    aria-pressed={isLiked}
                   >
                     <Heart
                       className={`w-6 h-6 transition-all duration-200 ${
                         isLiked
                           ? "fill-red-500 text-red-500 scale-110"
-                          : "text-gray-700 dark:text-gray-300 hover:text-gray-500 group-hover:scale-110"
+                          : "text-gray-700 dark:text-gray-300 group-hover:scale-110"
                       }`}
                     />
                   </button>
                   <button
                     onClick={() => toggleComments(post._id)}
-                    className="group"
+                    className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700/60 transition-colors group"
+                    aria-label="Show comments"
+                    aria-expanded={showingComments}
                   >
-                    <MessageCircle className="w-6 h-6 text-gray-700 dark:text-gray-300 hover:text-gray-500 group-hover:scale-110 transition-all duration-200" />
+                    <MessageCircle className="w-6 h-6 text-gray-700 dark:text-gray-300 group-hover:scale-110 transition-all duration-200" />
                   </button>
                   <button
                     onClick={() => handleShare(post)}
-                    className="group"
+                    className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700/60 transition-colors group"
+                    aria-label="Share post"
                   >
-                    <Share2 className="w-6 h-6 text-gray-700 dark:text-gray-300 hover:text-gray-500 group-hover:scale-110 transition-all duration-200" />
+                    <Share2 className="w-6 h-6 text-gray-700 dark:text-gray-300 group-hover:scale-110 transition-all duration-200" />
                   </button>
                 </div>
                 <button
                   onClick={() => toggleSave(post._id)}
-                  className="group"
+                  className="p-2 -mr-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700/60 transition-colors group"
+                  aria-label={isSaved ? "Remove from saved" : "Save post"}
+                  aria-pressed={isSaved}
                 >
                   {isSaved ? (
                     <BookmarkCheck className="w-6 h-6 fill-gray-900 dark:fill-white text-gray-900 dark:text-white" />
                   ) : (
-                    <Bookmark className="w-6 h-6 text-gray-700 dark:text-gray-300 hover:text-gray-500 group-hover:scale-110 transition-all duration-200" />
+                    <Bookmark className="w-6 h-6 text-gray-700 dark:text-gray-300 group-hover:scale-110 transition-all duration-200" />
                   )}
                 </button>
               </div>
 
-              {/* Likes Count */}
-              <div className="mt-2">
-                <p className="font-semibold text-sm text-gray-900 dark:text-white">
+              {/* Counts row */}
+              <div className="mt-2 flex items-center gap-3 text-sm">
+                <span className="font-semibold text-gray-900 dark:text-white">
                   {post.upvotes?.length || 0} {post.upvotes?.length === 1 ? "like" : "likes"}
-                </p>
+                </span>
+                {post.comments && post.comments.length > 0 && !showingComments && (
+                  <button
+                    onClick={() => toggleComments(post._id)}
+                    className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+                  >
+                    View all {post.comments.length} {post.comments.length === 1 ? "comment" : "comments"}
+                  </button>
+                )}
               </div>
-
-              {/* Caption Preview */}
-              {post.description && (
-                <div className="mt-1">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-semibold text-gray-900 dark:text-white mr-1">{userName}</span>
-                    {post.description.length > 100
-                      ? `${post.description.slice(0, 100)}...`
-                      : post.description}
-                  </p>
-                </div>
-              )}
-
-              {/* View Comments Link */}
-              {post.comments && post.comments.length > 0 && !showingComments && (
-                <button
-                  onClick={() => toggleComments(post._id)}
-                  className="text-sm text-gray-500 dark:text-gray-400 mt-1 hover:text-gray-700"
-                >
-                  View all {post.comments.length} comments
-                </button>
-              )}
             </div>
 
             {/* Comments Section */}
