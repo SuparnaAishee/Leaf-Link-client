@@ -183,67 +183,144 @@ const CreatePost = () => {
   };
 
   return (
-    <div>
-      <h1>Create a Post</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex items-center gap-10">
-          {uploadingImage && (
-            <p className="flex items-center gap-2 text-sm">
-              <span>Uploading Image</span> <Spinner size="sm" />
-            </p>
-          )}
+    <div className="container mx-auto px-4 py-6 max-w-3xl">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        {/* Header */}
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white">Create a Post</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Share your gardening tips with the community</p>
         </div>
 
-        <Editor
-          content={content}
-          setContent={setContent}
-          setUploadingImage={setUploadingImage}
-        />
-        <div className="mt-5 space-y-3">
-          <Input
-            {...register("title", { required: true })}
-            label="Title"
-            name="title"
-            type="text"
-          />
-          <Input
-            {...register("category", { required: true })}
-            label="Category"
-            name="category"
-            type="text"
-          />
-          <Input name="imageUrl" type="file" onChange={handleImageChange} />
-          {imagePreview && (
-            <div className="relative rounded-xl h-[300px] border-2 border-dashed border-default-300 p-2">
-              <img
-                alt="item"
-                className="h-full w-full object-cover object-center rounded-md"
-                src={imagePreview}
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6">
+          {/* Upload Status */}
+          {uploadingImage && (
+            <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400 mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+              <Spinner size="sm" color="success" />
+              <span>Uploading Image...</span>
+            </div>
+          )}
+
+          {/* Rich Text Editor */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Content
+            </label>
+            <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+              <Editor
+                content={content}
+                setContent={setContent}
+                setUploadingImage={setUploadingImage}
               />
             </div>
-          )}
-          <Input
-            {...register("description")}
-            label="Description"
-            name="description"
-            type="textarea"
-          />
+          </div>
 
-          {me?.data?.isVerified && me?.data?.premiumStatus && (
-            <div className="flex items-center justify-between">
-              <Checkbox {...register("isPremium")} color="success">
-                Premium
-              </Checkbox>
+          {/* Form Fields */}
+          <div className="space-y-4">
+            <Input
+              {...register("title", { required: true })}
+              label="Title"
+              name="title"
+              type="text"
+              variant="bordered"
+              classNames={{
+                inputWrapper: "border-gray-200 dark:border-gray-700",
+              }}
+            />
+            <Input
+              {...register("category", { required: true })}
+              label="Category"
+              name="category"
+              type="text"
+              variant="bordered"
+              placeholder="e.g., Herbs, Vegetables, Flowers"
+              classNames={{
+                inputWrapper: "border-gray-200 dark:border-gray-700",
+              }}
+            />
+
+            {/* Image Upload */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Cover Image
+              </label>
+              <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 hover:border-green-500 dark:hover:border-green-500 transition-colors">
+                <input
+                  name="imageUrl"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-50 dark:file:bg-green-900/30 file:text-green-600 dark:file:text-green-400 hover:file:bg-green-100 dark:hover:file:bg-green-900/50 cursor-pointer"
+                />
+              </div>
+              {imagePreview && (
+                <div className="relative mt-3 rounded-xl h-[250px] overflow-hidden border border-gray-200 dark:border-gray-700">
+                  <img
+                    alt="Preview"
+                    className="h-full w-full object-cover object-center"
+                    src={imagePreview}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImage(undefined);
+                      setImagePreview("");
+                    }}
+                    className="absolute top-2 right-2 p-1.5 bg-black/50 hover:bg-black/70 rounded-full text-white transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
-        <div className="mt-5">
-          <Button color="primary" isLoading={loading} type="submit">
-            Create Post
-          </Button>
-        </div>
-      </form>
+            <Input
+              {...register("description")}
+              label="Short Description"
+              name="description"
+              type="text"
+              variant="bordered"
+              placeholder="A brief summary of your post"
+              classNames={{
+                inputWrapper: "border-gray-200 dark:border-gray-700",
+              }}
+            />
+
+            {/* Premium Option */}
+            {me?.data?.isVerified && me?.data?.premiumStatus && (
+              <div className="flex items-center gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-200 dark:border-amber-800">
+                <Checkbox {...register("isPremium")} color="warning">
+                  <span className="text-amber-700 dark:text-amber-400 font-medium">Mark as Premium Content</span>
+                </Checkbox>
+              </div>
+            )}
+          </div>
+
+          {/* Submit Button */}
+          <div className="mt-6 flex items-center gap-3">
+            <Button
+              className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold h-12 rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
+              type="submit"
+              isLoading={loading}
+            >
+              {loading ? "Publishing..." : "Publish Post"}
+            </Button>
+            <Button
+              type="button"
+              variant="bordered"
+              className="h-12 rounded-xl border-gray-300 dark:border-gray-600"
+              onClick={() => {
+                reset();
+                setContent("");
+                setImagePreview("");
+              }}
+            >
+              Clear
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

@@ -21,7 +21,9 @@ axiosInstance.interceptors.request.use(
     const accessToken = cookieStore.get("accessToken")?.value;
 
     if (accessToken) {
-      config.headers.Authorization = accessToken;
+      // Server's auth middleware reads `authorization.split(' ')[1]`,
+      // so the token must be sent with the "Bearer " scheme prefix.
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
     return config;

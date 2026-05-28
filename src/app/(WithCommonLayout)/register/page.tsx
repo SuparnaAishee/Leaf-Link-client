@@ -1,70 +1,10 @@
-// "use client"
-// import LLForm from "@/src/components/form/LLFrom";
-// import LLInput from "@/src/components/form/LLInput";
-
-// import registerValidationSchema from "@/src/schemas/register.validation";
-// import { registerUser } from "@/src/services/AuthService";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { Button } from "@nextui-org/button";
-// import Link from "next/link";
-// import { FieldValues, SubmitHandler } from "react-hook-form";
-
-// const RegisterPage = () => {
-//   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-//    const userData = {
-//      ...data,
-//      profilePhoto:
-//        "https://res.cloudinary.com/dwelabpll/image/upload/v1727161859/positive-mindset-positive-life-portrait-happy-young-woman-home_590464-22422_pxuwht.avif",
-//    };
-//    console.log("form user data:",userData)
-//     registerUser(userData)
-//   };
-
-//   return (
-//     <div className="flex h-[calc(100vh-200px)] w-full flex-col items-center justify-center">
-//       <h3 className="my-2 text-2xl font-bold">Register with LeafLink</h3>
-//       <p className="mb-4">Create your account to get started</p>
-//       <div className="w-[35%]">
-//         <LLForm
-//           onSubmit={onSubmit}
-//           resolver={zodResolver(registerValidationSchema)}
-//         >
-//           <div className="py-3">
-//             <LLInput label="Full Name" name="name" type="text" />
-//           </div>
-//           <div className="py-3">
-//             <LLInput label="Email" name="email" type="email" />
-//           </div>
-//           <div className="py-3">
-//             <LLInput label="Mobile Number" name="mobileNumber" type="tel" />
-//           </div>
-//           <div className="py-3">
-//             <LLInput label="Password" name="password" type="password" />
-//           </div>
-
-//           <Button
-//             className="my-3 w-full rounded-md bg-default-900 font-semibold text-default mt-4 bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 text-white hover:from-purple-400 hover:via-purple-500 hover:to-purple-600 transition duration-300"
-//             size="lg"
-//             type="submit"
-//           >
-//             Register
-//           </Button>
-//         </LLForm>
-//         <div className="text-center">
-//           Already have an account? <Link href={"/login"}>Login</Link>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default RegisterPage;
-
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@nextui-org/button";
 import Link from "next/link";
 import { FieldValues, SubmitHandler } from "react-hook-form";
+import { Leaf, User, Loader2, Sparkles, Users, TrendingUp } from "lucide-react";
 
 import LLForm from "@/src/components/form/LLFrom";
 import LLInput from "@/src/components/form/LLInput";
@@ -74,65 +14,93 @@ import registerValidationSchema from "@/src/schemas/register.validation";
 export default function RegisterPage() {
   const { mutate: handleUserRegistration, isPending } = useUserRegistration();
 
-  //   useEffect(() => {
-  //     if (isPending) {
-  //       // Handle Loading satate
-  //     }
-  //   }, [isPending]);
-
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const userData = {
       ...data,
       profilePhoto:
         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
     };
-
-    console.log("Inside form user data: ", userData);
-
     handleUserRegistration(userData);
   };
 
-  if (isPending) {
-    //  handle loading state
-  }
-
   return (
-    <div className="flex h-[calc(100vh-100px)] flex-col items-center justify-center">
-      <h3 className="my-2 text-xl font-bold">Register with LeafLink</h3>
-      <p className="mb-4">Know About Gardening</p>
-      <div className="w-[35%]">
-        <LLForm
-          resolver={zodResolver(registerValidationSchema)}
-          onSubmit={onSubmit}
-        >
-          <div className="py-3">
-            <LLInput label="Name" name="name" size="sm" />
-          </div>
-          <div className="py-3">
-            <LLInput label="Email" name="email" size="sm" />
-          </div>
-          <div className="py-3">
-            <LLInput label="Mobile Number" name="mobileNumber" size="sm" />
-          </div>
-          <div className="py-3">
-            <LLInput
-              label="Password"
-              name="password"
-              size="sm"
-              type="password"
-            />
+    <div className="min-h-[calc(100vh-100px)] flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-md">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-8">
+          {/* Logo & Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center p-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl mb-4 shadow-lg shadow-green-500/20">
+              <Leaf className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              Join LeafLink
+            </h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-2">
+              Create your account and start your gardening journey
+            </p>
           </div>
 
-          <Button
-            className="my-3 w-full rounded-md bg-default-900 font-semibold text-default mt-4 bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 text-white hover:from-purple-400 hover:via-purple-500 hover:to-purple-600 transition duration-300"
-            size="lg"
-            type="submit"
+          <LLForm
+            resolver={zodResolver(registerValidationSchema)}
+            onSubmit={onSubmit}
           >
-            Registration
-          </Button>
-        </LLForm>
-        <div className="text-center">
-          Already have an account ? <Link href={"/login"}>Login</Link>
+            <div className="space-y-4">
+              <LLInput label="Full Name" name="name" />
+              <LLInput label="Email" name="email" type="email" />
+              <LLInput label="Mobile Number" name="mobileNumber" />
+              <LLInput label="Password" name="password" type="password" />
+            </div>
+
+            <Button
+              className="w-full mt-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl h-12 hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-md hover:shadow-lg"
+              size="lg"
+              type="submit"
+              disabled={isPending}
+            >
+              {isPending ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Creating account...
+                </span>
+              ) : (
+                "Create Account"
+              )}
+            </Button>
+          </LLForm>
+
+          <div className="mt-6 text-center">
+            <p className="text-gray-600 dark:text-gray-400">
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="text-green-600 hover:text-green-700 font-semibold transition-colors"
+              >
+                Sign In
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        {/* Benefits */}
+        <div className="mt-8 grid grid-cols-3 gap-4 text-center">
+          <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+            <div className="w-10 h-10 mx-auto mb-2 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-green-600" />
+            </div>
+            <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Share Tips</p>
+          </div>
+          <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+            <div className="w-10 h-10 mx-auto mb-2 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+              <Users className="w-5 h-5 text-green-600" />
+            </div>
+            <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Connect</p>
+          </div>
+          <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+            <div className="w-10 h-10 mx-auto mb-2 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+              <TrendingUp className="w-5 h-5 text-green-600" />
+            </div>
+            <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Grow</p>
+          </div>
         </div>
       </div>
     </div>

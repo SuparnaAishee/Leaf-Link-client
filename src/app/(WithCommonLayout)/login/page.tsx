@@ -1,124 +1,3 @@
-// "use client";
-
-// import LLForm from "@/src/components/form/LLFrom";
-// import LLInput from "@/src/components/form/LLInput";
-// import { loginValidationSchema } from "@/src/schemas/login.validation";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { Button } from "@nextui-org/button";
-// import { Card } from "@nextui-org/card";
-// import Link from "next/link";
-// import { FieldValues, SubmitHandler } from "react-hook-form";
-
-// const LoginPage = () => {
-//   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-//     console.log(data);
-//   };
-
-//   return (
-//     <div className="flex h-[calc(100vh-200px)] w-full flex-col items-center justify-center ">
-//       <h3 className="my-2 text-2xl font-bold">Login with LeafLink</h3>
-//       <p className="mb-4">Welcome Back! Let&lsquo;s Get Started</p>
-//       <div className="w-[35%]">
-//         <LLForm
-//           onSubmit={onSubmit}
-//           resolver={zodResolver(loginValidationSchema)}
-//         >
-//           <div className="py-3">
-//             <LLInput name="email" label="Email" type="email" />
-//           </div>
-//           <div className="py-3">
-//             <LLInput name="password" label="Password" type="password" />
-//           </div>
-
-//           <Button
-//             className="my-3 w-full rounded-md bg-default-900 font-semibold text-default mt-4 bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 text-white hover:from-purple-400 hover:via-purple-500 hover:to-purple-600 transition duration-300"
-//             size="lg"
-//             type="submit"
-//           >
-//             LogIn
-//           </Button>
-//         </LLForm>
-//         <div className="text-center">
-//           Don&lsquo;t have account ? <Link href={"/register"}>Register</Link>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default LoginPage;
-////
-// "use client";
-
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { Button } from "@nextui-org/button";
-// import Link from "next/link";
-// import { useRouter, useSearchParams } from "next/navigation";
-// import { useEffect } from "react";
-// import { FieldValues, SubmitHandler } from "react-hook-form";
-
-// import { loginValidationSchema } from "@/src/schemas/login.validation";
-// import { useUserLogin } from "@/src/hooks/auth.hook";
-// import { useUser } from "@/src/context/user.provider";
-// import LLInput from "@/src/components/form/LLInput";
-// import LLForm from "@/src/components/form/LLFrom";
-
-// const LoginPage = () => {
-//   const searchParams = useSearchParams();
-//   const router = useRouter();
-//   const { setIsLoading: userLoading } = useUser();
-
-//   const redirect = searchParams.get("redirect");
-//   const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
-//   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-//     console.log(data);
-//     handleUserLogin(data);
-//     userLoading(true);
-//   };
-
-//   useEffect(() => {
-//     if (!isPending && isSuccess) {
-//       if (redirect) {
-//         router.push(redirect);
-//       } else {
-//         router.push("/");
-//       }
-//     }
-//   }, [isPending, isSuccess]);
-
-//   return (
-//     <div className="flex h-[calc(100vh-200px)] w-full flex-col items-center justify-center">
-//       <h3 className="my-2 text-2xl font-bold">Login with LeafLink</h3>
-//       <p className="mb-4">Welcome Back! Let&lsquo;s Get Started</p>
-//       <div className="w-[35%]">
-//         <LLForm
-//           resolver={zodResolver(loginValidationSchema)}
-//           onSubmit={onSubmit}
-//         >
-//           <div className="py-3">
-//             <LLInput label="Email" name="email" type="email" />
-//           </div>
-//           <div className="py-3">
-//             <LLInput label="Password" name="password" type="password" />
-//           </div>
-
-//           <Button
-//             className="my-3 w-full rounded-md bg-default-900 font-semibold text-default mt-4 bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 text-white hover:from-purple-400 hover:via-purple-500 hover:to-purple-600 transition duration-300"
-//             size="lg"
-//             type="submit"
-//           >
-//             Login
-//           </Button>
-//         </LLForm>
-//         <div className="text-center">
-//           Don&lsquo;t have account ? <Link href={"/register"}>Register</Link>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default LoginPage;
 "use client";
 
 import { Suspense, useEffect } from "react";
@@ -127,6 +6,7 @@ import { Button } from "@nextui-org/button";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FieldValues, SubmitHandler } from "react-hook-form";
+import { Leaf, Loader2 } from "lucide-react";
 
 import { loginValidationSchema } from "@/src/schemas/login.validation";
 import { useUserLogin } from "@/src/hooks/auth.hook";
@@ -141,8 +21,8 @@ const LoginPage = () => {
 
   const redirect = searchParams.get("redirect");
   const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
+
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
     handleUserLogin(data);
     userLoading(true);
   };
@@ -155,34 +35,86 @@ const LoginPage = () => {
         router.push("/");
       }
     }
-  }, [isPending, isSuccess]);
+  }, [isPending, isSuccess, redirect, router]);
 
   return (
-    <div className="flex h-[calc(100vh-200px)] w-full flex-col items-center justify-center">
-      <h3 className="my-2 text-2xl font-bold">Login with LeafLink</h3>
-      <p className="mb-4">Welcome Back! Let&lsquo;s Get Started</p>
-      <div className="w-[35%]">
-        <LLForm
-          resolver={zodResolver(loginValidationSchema)}
-          onSubmit={onSubmit}
-        >
-          <div className="py-3">
-            <LLInput label="Email" name="email" type="email" />
-          </div>
-          <div className="py-3">
-            <LLInput label="Password" name="password" type="password" />
+    <div className="min-h-[calc(100vh-200px)] flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-md">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-8">
+          {/* Logo & Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center p-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl mb-4 shadow-lg shadow-green-500/20">
+              <Leaf className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              Welcome Back!
+            </h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-2">
+              Sign in to continue to LeafLink
+            </p>
           </div>
 
-          <Button
-            className="my-3 w-full rounded-md bg-default-900 font-semibold text-default mt-4 bg-gradient-to-r from-purple-400 via-purple-600 to-purple-700 text-white hover:from-purple-400 hover:via-purple-500 hover:to-purple-600 transition duration-300"
-            size="lg"
-            type="submit"
+          <LLForm
+            resolver={zodResolver(loginValidationSchema)}
+            onSubmit={onSubmit}
           >
-            Login
-          </Button>
-        </LLForm>
-        <div className="text-center">
-          Don&lsquo;t have an account? <Link href={"/register"}>Register</Link>
+            <div className="space-y-4">
+              <LLInput
+                label="Email"
+                name="email"
+                type="email"
+              />
+              <LLInput
+                label="Password"
+                name="password"
+                type="password"
+              />
+            </div>
+
+            <div className="flex items-center justify-end mt-2">
+              <Link
+                href="/register"
+                className="text-sm text-green-600 hover:text-green-700 font-medium transition-colors"
+              >
+                Forgot password?
+              </Link>
+            </div>
+
+            <Button
+              className="w-full mt-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl h-12 hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-md hover:shadow-lg"
+              size="lg"
+              type="submit"
+              disabled={isPending}
+            >
+              {isPending ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Signing in...
+                </span>
+              ) : (
+                "Sign In"
+              )}
+            </Button>
+          </LLForm>
+
+          <div className="mt-6 text-center">
+            <p className="text-gray-600 dark:text-gray-400">
+              Don&apos;t have an account?{" "}
+              <Link
+                href="/register"
+                className="text-green-600 hover:text-green-700 font-semibold transition-colors"
+              >
+                Create Account
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        {/* Decorative elements */}
+        <div className="mt-8 text-center">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Join our community of gardening enthusiasts
+          </p>
         </div>
       </div>
     </div>
@@ -191,7 +123,11 @@ const LoginPage = () => {
 
 const LoginWithSuspense = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={
+      <div className="min-h-[calc(100vh-200px)] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-green-500" />
+      </div>
+    }>
       <LoginPage />
     </Suspense>
   );

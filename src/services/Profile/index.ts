@@ -1,13 +1,15 @@
 "use server";
-import axios from "axios"; // Use axios instead of nexiosInstance
+
+import axios from "axios";
 import { FieldValues } from "react-hook-form";
+import envConfig from "@/src/config/envConfig";
 
 export const updateProfile = async (payload: FieldValues) => {
   try {
     const { data }: any = await axios.put(
-      "https://gardening-tips-platform-server-three.vercel.app/api/profile/update",
+      `${envConfig.baseApi}/profile/update`,
       payload
-    ); // Axios put request
+    );
 
     if (data?.success) {
       return data;
@@ -15,16 +17,18 @@ export const updateProfile = async (payload: FieldValues) => {
       throw new Error(data?.message);
     }
   } catch (error: any) {
-    throw new Error(error.response?.data?.message || error.message); // Enhanced error handling
+    throw new Error(error.response?.data?.message || error.message);
   }
 };
 
 export const verifyProfile = async (payload: any) => {
   try {
-    const { data }: any = await axios.post("/verify-profile", payload); // Axios post request
-
+    const { data }: any = await axios.post(
+      `${envConfig.baseApi}/verify-profile`,
+      payload
+    );
     return data;
   } catch (error: any) {
-    throw new Error(error.response?.data?.message || error.message); // Enhanced error handling
+    throw new Error(error.response?.data?.message || error.message);
   }
 };

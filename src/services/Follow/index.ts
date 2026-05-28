@@ -1,23 +1,22 @@
-// services/Follow.ts
+"use server";
+
 import axios from "axios";
 import { revalidateTag } from "next/cache";
+import envConfig from "@/src/config/envConfig";
 
-// Define the type for the follow payload
 export type FollowPayload = {
   followingId: string;
-  followerId: string; // Ensure this line is included
+  followerId: string;
 };
 
 export const followUser = async (payload: FollowPayload) => {
   try {
     const { data } = await axios.post(
-      "https://gardening-tips-platform-server-three.vercel.app/api/follow",
+      `${envConfig.baseApi}/follow`,
       payload
     );
 
-    console.log(data);
     revalidateTag("user");
-
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message);
