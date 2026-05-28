@@ -223,7 +223,7 @@
 //           {posts.map((post) => (
 //             <div
 //               key={post._id}
-//               className="card mb-4 border rounded-lg shadow-md p-6 bg-default-black"
+//               className="mb-4 rounded-2xl shadow-sm hover:shadow-lg transition-shadow p-6 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700"
 //             >
 //               <div className="flex items-start mb-2">
 //                 <img
@@ -520,7 +520,7 @@ export default function PostsPage() {
           {posts.map((post) => (
             <div
               key={post._id}
-              className="card mb-4 border rounded-lg shadow-md p-6 bg-default-black"
+              className="mb-4 rounded-2xl shadow-sm hover:shadow-lg transition-shadow p-6 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700"
             >
               <div className="flex items-start mb-2">
                 <img

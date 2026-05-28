@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@nextui-org/button";
 import Link from "next/link";
@@ -12,7 +14,8 @@ import { useUserRegistration } from "@/src/hooks/auth.hook";
 import registerValidationSchema from "@/src/schemas/register.validation";
 
 export default function RegisterPage() {
-  const { mutate: handleUserRegistration, isPending } = useUserRegistration();
+  const router = useRouter();
+  const { mutate: handleUserRegistration, isPending, isSuccess } = useUserRegistration();
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const userData = {
@@ -22,6 +25,12 @@ export default function RegisterPage() {
     };
     handleUserRegistration(userData);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.push("/login");
+    }
+  }, [isSuccess, router]);
 
   return (
     <div className="min-h-[calc(100vh-100px)] flex items-center justify-center px-4 py-8">

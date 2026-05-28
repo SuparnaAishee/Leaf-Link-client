@@ -1,119 +1,120 @@
-"use client"; // Keep this if you are using client-side components
-import { useRouter } from "next/navigation"; // Import the useRouter hook
+"use client";
+
+import { useRouter } from "next/navigation";
 import {
-  FaEdit,
-  FaShieldAlt,
-  FaLock,
-  FaUser,
-  FaClipboardCheck,
-  FaHeart,
-} from "react-icons/fa"; // Importing icons
+  Settings as SettingsIcon,
+  Edit3,
+  ShieldCheck,
+  Lock,
+  UserCircle,
+  ClipboardCheck,
+  Heart,
+  ChevronRight,
+} from "lucide-react";
+
+type Row = {
+  key: string;
+  label: string;
+  description: string;
+  icon: React.ReactNode;
+  tone: string;
+  onClick: () => void;
+};
 
 const SettingsPage = () => {
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
 
-  // Function to navigate to the Profile Update page
-  const handleEditProfile = () => {
-    router.push("/profile/updateProfile"); // Update the path according to your routing
-  };
-
-  // Function to handle keyboard events
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "Enter" || event.key === " ") {
-      handleEditProfile(); // Trigger the click handler on Enter or Space
-    }
-  };
+  const rows: Row[] = [
+    {
+      key: "edit",
+      label: "Edit Profile",
+      description: "Update your name, bio, and photo",
+      icon: <Edit3 className="w-5 h-5" />,
+      tone: "text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-300",
+      onClick: () => router.push("/profile/updateProfile"),
+    },
+    {
+      key: "verify",
+      label: "Verify Profile",
+      description: "Get the blue checkmark next to your name",
+      icon: <ShieldCheck className="w-5 h-5" />,
+      tone: "text-green-600 bg-green-50 dark:bg-green-900/30 dark:text-green-300",
+      onClick: () => router.push("/profile/verify-profile"),
+    },
+    {
+      key: "password",
+      label: "Change Password",
+      description: "Coming soon — manage from your account",
+      icon: <Lock className="w-5 h-5" />,
+      tone: "text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-300",
+      onClick: () => router.push("/profile/updateProfile"),
+    },
+    {
+      key: "details",
+      label: "Profile Details",
+      description: "View your public profile",
+      icon: <UserCircle className="w-5 h-5" />,
+      tone: "text-purple-600 bg-purple-50 dark:bg-purple-900/30 dark:text-purple-300",
+      onClick: () => router.push("/profile"),
+    },
+    {
+      key: "premium",
+      label: "Account Status",
+      description: "See your premium status and history",
+      icon: <ClipboardCheck className="w-5 h-5" />,
+      tone: "text-orange-600 bg-orange-50 dark:bg-orange-900/30 dark:text-orange-300",
+      onClick: () => router.push("/profile/premiumContent"),
+    },
+    {
+      key: "favs",
+      label: "Favourites",
+      description: "Posts you've bookmarked",
+      icon: <Heart className="w-5 h-5" />,
+      tone: "text-rose-600 bg-rose-50 dark:bg-rose-900/30 dark:text-rose-300",
+      onClick: () => router.push("/profile"),
+    },
+  ];
 
   return (
-    <div className="flex flex-col items-center h-screen bg-default-black rounded">
-      <h2 className="text-3xl font-bold mb-6 text-white">Settings</h2>
-      <div className="bg-default-100 shadow-md rounded-lg p-6 w-full h-1/2">
-        {/* Edit Profile Section */}
-        <div
-          aria-label="Edit Profile" // For screen readers
-          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
-          role="button" // Adding role to indicate this is a button
-          tabIndex={0} // Making it focusable
-          onClick={handleEditProfile} // Add click handler
-          onKeyPress={handleKeyPress} // Add keyboard handler
-        >
-          <FaEdit className="text-blue-500 mr-2" />
-          <span className="text-lg">Edit Profile</span>
+    <div className="min-h-[calc(100vh-100px)] py-10 px-4">
+      <div className="max-w-2xl mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="p-2.5 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-md shadow-green-500/30">
+            <SettingsIcon className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Manage your account and preferences
+            </p>
+          </div>
         </div>
 
-        {/* Make Profile Verified Section */}
-        <div
-          aria-label="Make Profile Verified"
-          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
-          role="button"
-          tabIndex={0}
-          onClick={() => console.log("Make Profile Verified clicked")}
-          onKeyPress={(e) =>
-            e.key === "Enter" && console.log("Make Profile Verified clicked")
-          }
-        >
-          <FaShieldAlt className="text-green-500 mr-2" />
-          <span className="text-lg">Make Profile Verified</span>
-        </div>
-
-        {/* Change Password Section */}
-        <div
-          aria-label="Change Password"
-          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
-          role="button"
-          tabIndex={0}
-          onClick={() => console.log("Change Password clicked")}
-          onKeyPress={(e) =>
-            e.key === "Enter" && console.log("Change Password clicked")
-          }
-        >
-          <FaLock className="text-yellow-500 mr-2" />
-          <span className="text-lg">Change Password</span>
-        </div>
-
-        {/* Profile Details Section */}
-        <div
-          aria-label="Profile Details"
-          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
-          role="button"
-          tabIndex={0}
-          onClick={() => console.log("Profile Details clicked")}
-          onKeyPress={(e) =>
-            e.key === "Enter" && console.log("Profile Details clicked")
-          }
-        >
-          <FaUser className="text-purple-500 mr-2" />
-          <span className="text-lg">Profile Details</span>
-        </div>
-
-        {/* Account Status Section */}
-        <div
-          aria-label="Account Status"
-          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
-          role="button"
-          tabIndex={0}
-          onClick={() => console.log("Account Status clicked")}
-          onKeyPress={(e) =>
-            e.key === "Enter" && console.log("Account Status clicked")
-          }
-        >
-          <FaClipboardCheck className="text-orange-500 mr-2" />
-          <span className="text-lg">Account Status</span>
-        </div>
-
-        {/* Favourites Section */}
-        <div
-          aria-label="Favourites"
-          className="flex items-center cursor-pointer mb-4 hover:bg-gray-200 rounded p-2 transition duration-200"
-          role="button"
-          tabIndex={0}
-          onClick={() => console.log("Favourites clicked")}
-          onKeyPress={(e) =>
-            e.key === "Enter" && console.log("Favourites clicked")
-          }
-        >
-          <FaHeart className="text-red-500 mr-2" />
-          <span className="text-lg">Favourites</span>
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-sm overflow-hidden">
+          {rows.map((row, i) => (
+            <button
+              key={row.key}
+              onClick={row.onClick}
+              className={`w-full flex items-center gap-4 px-5 py-4 text-left hover:bg-green-50/60 dark:hover:bg-green-900/20 transition-colors ${
+                i !== rows.length - 1
+                  ? "border-b border-gray-100 dark:border-gray-700/60"
+                  : ""
+              }`}
+            >
+              <span className={`flex-shrink-0 p-2.5 rounded-xl ${row.tone}`}>
+                {row.icon}
+              </span>
+              <span className="flex-1 min-w-0">
+                <span className="block font-semibold text-gray-900 dark:text-white">
+                  {row.label}
+                </span>
+                <span className="block text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                  {row.description}
+                </span>
+              </span>
+              <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
+            </button>
+          ))}
         </div>
       </div>
     </div>
