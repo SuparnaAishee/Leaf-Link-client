@@ -16,13 +16,18 @@
     --glass-border: rgba(255, 255, 255, 0.1);
   }
 
-  body {
-    @apply antialiased;
-    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0fdf4 100%);
+  html {
+    min-height: 100%;
+    background: #f9fafb;
   }
 
-  .dark body {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  .dark html {
+    background: #000000;
+  }
+
+  body {
+    @apply antialiased;
+    min-height: 100vh;
   }
 
   * {

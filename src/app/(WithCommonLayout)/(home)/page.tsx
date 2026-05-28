@@ -120,10 +120,11 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      <main className="container mx-auto py-6 px-4 max-w-7xl">
-        <div className="flex flex-col lg:flex-row gap-6 items-start">
-          {/* Left Sidebar - sticky, scrolls inside itself if tall */}
-          <aside className="hidden lg:block w-72 flex-shrink-0 space-y-4 sticky top-[5rem] max-h-[calc(100vh-5.5rem)] overflow-y-auto scrollbar-hide pr-1">
+      <main className="w-full pt-2 pb-6 px-2 sm:px-3">
+        <div className="mx-auto flex gap-3 w-full max-w-screen-2xl">
+          {/* Left Sidebar - column wrapper, sticky inner */}
+          <aside className="hidden lg:block w-72 xl:w-72 2xl:w-80 flex-shrink-0">
+            <div className="sticky top-[4.25rem] max-h-[calc(100vh-4.5rem)] overflow-y-auto scrollbar-hide space-y-3 pr-1">
             {/* User Profile Card */}
             {user?.email && (
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
@@ -229,10 +230,11 @@ const Home: React.FC = () => {
               </div>
               <p className="mt-2">LeafLink © 2026</p>
             </div>
+            </div>
           </aside>
 
-          {/* Main Feed */}
-          <div className="flex-1 min-w-0 space-y-4">
+          {/* Main Feed - flex grow, capped width, centered */}
+          <div className="flex-1 min-w-0 max-w-2xl mx-auto w-full space-y-3">
             {/* Stories */}
             <Stories />
 
@@ -296,8 +298,9 @@ const Home: React.FC = () => {
             <InfiniteScrollPosts selectedCategory={selectedCategory} />
           </div>
 
-          {/* Right Sidebar - sticky, scrolls inside itself if tall */}
-          <aside className="hidden xl:block w-80 flex-shrink-0 space-y-4 sticky top-[5rem] max-h-[calc(100vh-5.5rem)] overflow-y-auto scrollbar-hide pr-1">
+          {/* Right Sidebar - column wrapper, sticky inner */}
+          <aside className="hidden xl:block w-72 2xl:w-80 flex-shrink-0">
+            <div className="sticky top-[4.25rem] max-h-[calc(100vh-4.5rem)] overflow-y-auto scrollbar-hide space-y-3 pl-1">
             {/* Suggestions */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4">
               <div className="flex items-center justify-between mb-4">
@@ -449,6 +452,7 @@ const Home: React.FC = () => {
                   </div>
                 </div>
               </div>
+            </div>
             </div>
           </aside>
         </div>

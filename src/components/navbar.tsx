@@ -47,9 +47,12 @@ export const Navbar = () => {
 
   return (
     <NextUINavbar
-      maxWidth="xl"
-      position="sticky"
-      className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm"
+      maxWidth="full"
+      position="static"
+      classNames={{
+        base: "bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm",
+        wrapper: "px-4",
+      }}
       height="4rem"
     >
       {/* Left Side - Logo */}
