@@ -37,9 +37,14 @@ import type { TPost } from "@/src/types/post";
 import { getCurrentUser } from "@/src/services/AuthService";
 import UpdatePost from "@/src/components/modal/UpdatePost";
 import envConfig from "@/src/config/envConfig";
+import { useGetMe } from "@/src/hooks/profile";
 
 export default function ProfilePage() {
   const { user } = useUser();
+  const { data: meResponse } = useGetMe(user?.email as string);
+  const me = meResponse?.data;
+  const followersCount = me?.followers?.length ?? user?.followers?.length ?? 0;
+  const followingCount = me?.following?.length ?? user?.following?.length ?? 0;
   const [posts, setPosts] = useState<TPost[]>([]);
   const [activeTab, setActiveTab] = useState("posts");
   const [isFollowing, setIsFollowing] = useState(false);
@@ -256,13 +261,15 @@ export default function ProfilePage() {
             </div>
             <div className="text-center cursor-pointer hover:opacity-80 transition-opacity">
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                {user?.followers?.length || 128}
+                {followersCount}
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Followers</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {followersCount === 1 ? "Follower" : "Followers"}
+              </p>
             </div>
             <div className="text-center cursor-pointer hover:opacity-80 transition-opacity">
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                {user?.following?.length || 89}
+                {followingCount}
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400">Following</p>
             </div>
