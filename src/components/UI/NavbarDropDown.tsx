@@ -1,71 +1,151 @@
-/* eslint-disable padding-line-between-statements */
-/* eslint-disable prettier/prettier */
 "use client";
+
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownSection,
+  DropdownTrigger,
+} from "@nextui-org/dropdown";
 import { Avatar } from "@nextui-org/avatar";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
 import { usePathname, useRouter } from "next/navigation";
+import {
+  Crown,
+  LogOut,
+  PenSquare,
+  Search,
+  Settings,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  User,
+} from "lucide-react";
 
 import { protectedRoutes } from "@/src/constant";
 import { useUser } from "@/src/context/user.provider";
+import { useGetMe } from "@/src/hooks/profile";
 import { logout } from "@/src/services/AuthService";
 
 const NavbarDropDown = () => {
-
-  const router =useRouter();
+  const router = useRouter();
   const pathname = usePathname();
-  const {user,setIsLoading : userLoading} =useUser();
-const handleLogOut = ()=>{
-  logout();
-  userLoading(true);
+  const { user, setIsLoading: userLoading } = useUser();
+  const { data: meResponse } = useGetMe(user?.email as string);
+  const me = meResponse?.data;
 
-  if(protectedRoutes.some((route)=>pathname.match(route))){
-    router.push("/")
-  }
-};
-  const handleNavigation =(pathname:string)=>{
-    router.push(pathname)
-  }
-    return (
-      <Dropdown>
-        <DropdownTrigger>
-          <Avatar
-            className="cursor-pointer"
-            src={
-              user?.profilePhoto
-            }
-          />
-        </DropdownTrigger>
-        <DropdownMenu aria-label="Static Actions">
-          <DropdownItem onClick={() => handleNavigation("/profile")}>
-            Profile
+  const isAdmin = (me?.role || user?.role) === "ADMIN";
+  const isPremium = me?.premiumStatus ?? user?.premiumStatus ?? false;
+
+  const handleLogOut = () => {
+    logout();
+    userLoading(true);
+    if (protectedRoutes.some((route) => pathname.match(route))) {
+      router.push("/");
+    }
+  };
+
+  const go = (href: string) => router.push(href);
+
+  return (
+    <Dropdown placement="bottom-end">
+      <DropdownTrigger>
+        <Avatar
+          className="cursor-pointer"
+          src={user?.profilePhoto || undefined}
+          name={user?.name}
+          size="sm"
+        />
+      </DropdownTrigger>
+
+      <DropdownMenu aria-label="Profile actions" className="w-64">
+        <DropdownSection
+          title={user?.name ? `Signed in as ${user.name}` : "Account"}
+          showDivider
+        >
+          <DropdownItem
+            key="profile"
+            startContent={<User className="w-4 h-4" />}
+            onClick={() => go("/profile")}
+          >
+            View profile
           </DropdownItem>
+          <DropdownItem
+            key="edit"
+            startContent={<PenSquare className="w-4 h-4" />}
+            onClick={() => go("/profile/updateProfile")}
+          >
+            Edit profile
+          </DropdownItem>
+        </DropdownSection>
 
-          <DropdownItem onClick={() => handleNavigation("/profile/settings")}>
+        <DropdownSection title="Discover" showDivider>
+          <DropdownItem
+            key="search"
+            startContent={<Search className="w-4 h-4" />}
+            onClick={() => go("/profile/searchUser")}
+          >
+            Find gardeners
+          </DropdownItem>
+          <DropdownItem
+            key="ai"
+            startContent={<Sparkles className="w-4 h-4 text-green-500" />}
+            onClick={() => go("/ai-garden")}
+          >
+            AI Plant Doctor
+          </DropdownItem>
+          {isPremium ? (
+            <DropdownItem
+              key="premium-content"
+              startContent={<Star className="w-4 h-4 text-amber-500" />}
+              onClick={() => go("/profile/premiumContent")}
+            >
+              Premium content
+            </DropdownItem>
+          ) : (
+            <DropdownItem
+              key="go-premium"
+              startContent={<Crown className="w-4 h-4 text-amber-500" />}
+              onClick={() => go("/profile/verify-profile")}
+            >
+              Go Premium
+            </DropdownItem>
+          )}
+        </DropdownSection>
+
+        <DropdownSection showDivider={isAdmin}>
+          <DropdownItem
+            key="settings"
+            startContent={<Settings className="w-4 h-4" />}
+            onClick={() => go("/profile/settings")}
+          >
             Settings
           </DropdownItem>
+        </DropdownSection>
 
-          <DropdownItem
-            onClick={() => handleNavigation("/profile/create-post")}
-          >
-            Create-Post
-          </DropdownItem>
-          <DropdownItem
-            onClick={() => handleNavigation("/admin")}
-          >
-            Admin Dashboard
-          </DropdownItem>
+        {(isAdmin ? (
+          <DropdownSection showDivider>
+            <DropdownItem
+              key="admin"
+              startContent={<ShieldCheck className="w-4 h-4 text-emerald-600" />}
+              onClick={() => go("/admin")}
+            >
+              Admin dashboard
+            </DropdownItem>
+          </DropdownSection>
+        ) : null) as any}
 
-          <DropdownItem
-            key="delete"
-            className="text-danger"
-            color="danger"
-            onClick={() => handleLogOut()}
-          >
-            Log Out
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-    );
+        <DropdownItem
+          key="logout"
+          className="text-danger"
+          color="danger"
+          startContent={<LogOut className="w-4 h-4" />}
+          onClick={handleLogOut}
+        >
+          Log out
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
+  );
 };
 
 export default NavbarDropDown;
