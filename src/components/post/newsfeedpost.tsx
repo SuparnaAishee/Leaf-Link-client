@@ -29,6 +29,7 @@ import { useUser } from "@/src/context/user.provider";
 import { useAddVote } from "@/src/hooks/post";
 import { useFollowUnfollow } from "@/src/hooks/follow";
 import PostComments from "./PostComments";
+import ShareModal from "./ShareModal";
 
 const extractId = (entry: unknown): string | null => {
   if (!entry) return null;
@@ -60,6 +61,7 @@ export default function InfiniteScrollPosts({
   const [followOverrides, setFollowOverrides] = useState<
     Record<string, boolean>
   >({});
+  const [shareTarget, setShareTarget] = useState<TPost | null>(null);
   const [posts, setPosts] = useState<TPost[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -245,17 +247,7 @@ export default function InfiniteScrollPosts({
   };
 
   const handleShare = (post: TPost) => {
-    if (navigator.share) {
-      navigator.share({
-        title: post.title,
-        text: post.description,
-        url: window.location.href + `/posts/${post._id}`,
-      });
-    } else {
-      navigator.clipboard.writeText(
-        window.location.href + `/posts/${post._id}`
-      );
-    }
+    setShareTarget(post);
   };
 
   const getTimeAgo = (date: string) => {
@@ -313,6 +305,7 @@ export default function InfiniteScrollPosts({
   }
 
   return (
+    <>
     <InfiniteScroll
       dataLength={posts.length}
       endMessage={
@@ -588,5 +581,13 @@ export default function InfiniteScrollPosts({
         );
       })}
     </InfiniteScroll>
+    <ShareModal
+      open={!!shareTarget}
+      onClose={() => setShareTarget(null)}
+      title={shareTarget?.title || "LeafLink post"}
+      text={shareTarget?.description}
+      postId={shareTarget?._id || ""}
+    />
+    </>
   );
 }
