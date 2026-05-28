@@ -120,11 +120,13 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      <main className="w-full pt-2 pb-6 px-2 sm:px-3">
-        <div className="mx-auto flex gap-3 w-full max-w-screen-2xl">
-          {/* Left Sidebar - column wrapper, sticky inner */}
-          <aside className="hidden lg:block w-72 xl:w-72 2xl:w-80 flex-shrink-0">
-            <div className="sticky top-[4.25rem] max-h-[calc(100vh-4.5rem)] overflow-y-auto scrollbar-hide space-y-3 pr-1">
+      <main className="w-full pt-2 pb-6">
+        {/* Same container as navbar wrapper for perfect L/R alignment */}
+        <div className="max-w-screen-2xl mx-auto w-full px-4">
+          <div className="flex gap-4 justify-between">
+            {/* Left Sidebar - aligned with navbar logo */}
+            <aside className="hidden lg:block w-64 xl:w-72 flex-shrink-0">
+            <div className="sticky top-[4.25rem] max-h-[calc(100vh-4.5rem)] overflow-y-auto scrollbar-hide space-y-3">
             {/* User Profile Card */}
             {user?.email && (
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
@@ -233,8 +235,8 @@ const Home: React.FC = () => {
             </div>
           </aside>
 
-          {/* Main Feed - flex grow, capped width, centered */}
-          <div className="flex-1 min-w-0 max-w-2xl mx-auto w-full space-y-3">
+          {/* Main Feed - centered in remaining space */}
+          <div className="flex-1 min-w-0 max-w-2xl space-y-3">
             {/* Stories */}
             <Stories />
 
@@ -298,9 +300,9 @@ const Home: React.FC = () => {
             <InfiniteScrollPosts selectedCategory={selectedCategory} />
           </div>
 
-          {/* Right Sidebar - column wrapper, sticky inner */}
-          <aside className="hidden xl:block w-72 2xl:w-80 flex-shrink-0">
-            <div className="sticky top-[4.25rem] max-h-[calc(100vh-4.5rem)] overflow-y-auto scrollbar-hide space-y-3 pl-1">
+          {/* Right Sidebar - aligned with navbar right icons */}
+          <aside className="hidden xl:block w-64 2xl:w-72 flex-shrink-0">
+            <div className="sticky top-[4.25rem] max-h-[calc(100vh-4.5rem)] overflow-y-auto scrollbar-hide space-y-3">
             {/* Suggestions */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4">
               <div className="flex items-center justify-between mb-4">
@@ -455,6 +457,7 @@ const Home: React.FC = () => {
             </div>
             </div>
           </aside>
+          </div>
         </div>
       </main>
 

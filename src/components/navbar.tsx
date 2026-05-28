@@ -18,7 +18,9 @@ import { useUser } from "../context/user.provider";
 import NavbarDropDown from "./UI/NavbarDropDown";
 import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/theme-switch";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import { logout } from "@/src/services/AuthService";
+import { protectedRoutes } from "@/src/constant";
 import {
   UserIcon,
   Leaf,
@@ -34,8 +36,9 @@ import {
 } from "lucide-react";
 
 export const Navbar = () => {
-  const { user } = useUser();
+  const { user, setIsLoading: userLoading } = useUser();
   const router = useRouter();
+  const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -45,13 +48,21 @@ export const Navbar = () => {
     router.push(`/profile/searchUser?q=${encodeURIComponent(term)}`);
   };
 
+  const handleLogOut = () => {
+    logout();
+    userLoading(true);
+    if (protectedRoutes.some((route) => pathname.match(route))) {
+      router.push("/");
+    }
+  };
+
   return (
     <NextUINavbar
       maxWidth="full"
       position="static"
       classNames={{
         base: "bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm",
-        wrapper: "px-4",
+        wrapper: "max-w-screen-2xl mx-auto w-full px-4",
       }}
       height="4rem"
     >
@@ -207,22 +218,32 @@ export const Navbar = () => {
             </div>
           )}
 
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                className={clsx(
-                  "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium",
-                  index === siteConfig.navMenuItems.length - 1
-                    ? "text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
-                    : "text-gray-700 dark:text-gray-200 hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-600"
-                )}
-                href={item.href}
-                size="lg"
+          {siteConfig.navMenuItems.map((item, index) => {
+            const ItemIcon = item.icon;
+            return (
+              <NavbarMenuItem key={`${item.href}-${index}`}>
+                <Link
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-gray-700 dark:text-gray-200 hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-600"
+                  href={item.href}
+                  size="lg"
+                >
+                  {ItemIcon && <ItemIcon className="w-5 h-5 text-green-600" />}
+                  {item.label}
+                </Link>
+              </NavbarMenuItem>
+            );
+          })}
+
+          {user?.email && (
+            <NavbarMenuItem>
+              <button
+                onClick={handleLogOut}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-left"
               >
-                {item.label}
-              </Link>
+                Logout
+              </button>
             </NavbarMenuItem>
-          ))}
+          )}
         </div>
 
         {/* Mobile Login Button */}

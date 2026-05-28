@@ -1,4 +1,13 @@
-import { Home, Info, User, PlusSquare, Search } from "lucide-react"; // ✅ Updated Create Post icon
+import {
+  Home,
+  Info,
+  User,
+  PlusSquare,
+  Search,
+  Compass,
+  Sparkles,
+  Settings,
+} from "lucide-react";
 
 export type SiteConfig = typeof siteConfig;
 
@@ -38,25 +47,12 @@ export const siteConfig = {
     },
   ],
   navMenuItems: [
-    {
-      label: "Profile",
-      href: "/profile",
-    },
-    {
-      label: "Dashboard",
-      href: "/dashboard",
-    },
-    {
-      label: "Settings",
-      href: "/settings",
-    },
-    {
-      label: "Help & Feedback",
-      href: "/help-feedback",
-    },
-    {
-      label: "Logout",
-      href: "/logout",
-    },
+    { label: "Home", href: "/", icon: Home },
+    { label: "Explore", href: "/profile/searchUser", icon: Compass },
+    { label: "Create Post", href: "/profile/create-post", icon: PlusSquare },
+    { label: "AI Plant Doctor", href: "/ai-garden", icon: Sparkles },
+    { label: "Profile", href: "/profile", icon: User },
+    { label: "Settings", href: "/profile/settings", icon: Settings },
+    { label: "About", href: "/about", icon: Info },
   ],
 };
