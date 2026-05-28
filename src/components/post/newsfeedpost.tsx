@@ -23,18 +23,42 @@ import {
 import { TPost } from "@/src/types/post";
 import envConfig from "@/src/config/envConfig";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useUser } from "@/src/context/user.provider";
+import { useAddVote } from "@/src/hooks/post";
+
+const extractId = (entry: unknown): string | null => {
+  if (!entry) return null;
+  if (typeof entry === "string") return entry;
+  if (typeof entry === "object" && entry !== null && "_id" in entry) {
+    const id = (entry as { _id: unknown })._id;
+    return typeof id === "string" ? id : null;
+  }
+  return null;
+};
+
+const upvotesIncludeUser = (
+  upvotes: TPost["upvotes"] | undefined,
+  userId: string | undefined,
+) => {
+  if (!upvotes || !userId) return false;
+  return upvotes.some((entry) => extractId(entry) === userId);
+};
 
 export default function InfiniteScrollPosts({
   selectedCategory,
 }: {
   selectedCategory: string;
 }) {
+  const router = useRouter();
+  const { user } = useUser();
+  const { mutate: castVote } = useAddVote();
   const [posts, setPosts] = useState<TPost[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedPostIds, setExpandedPostIds] = useState<string[]>([]);
-  const [likedPosts, setLikedPosts] = useState<string[]>([]);
   const [savedPosts, setSavedPosts] = useState<string[]>([]);
   const [showComments, setShowComments] = useState<string[]>([]);
   const [commentText, setCommentText] = useState<{ [key: string]: string }>({});
@@ -94,28 +118,50 @@ export default function InfiniteScrollPosts({
     );
   };
 
-  const toggleLike = async (postId: string, showAnimation = false) => {
-    const liked = likedPosts.includes(postId);
-    setLikedPosts((prev) =>
-      liked ? prev.filter((id) => id !== postId) : [...prev, postId]
-    );
+  const toggleLike = (postId: string, showAnimation = false) => {
+    if (!user?._id) {
+      toast.error("Please log in to like posts");
+      router.push("/login");
+      return;
+    }
+
+    const userId = user._id;
+    const target = posts.find((p) => p._id === postId);
+    const wasLiked = upvotesIncludeUser(target?.upvotes, userId);
+
     setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post._id === postId
-          ? {
-              ...post,
-              upvotes: liked
-                ? post.upvotes.filter((id) => id !== postId)
-                : [...post.upvotes, postId],
-            }
-          : post
-      )
+      prevPosts.map((post) => {
+        if (post._id !== postId) return post;
+        const upvotes = (post.upvotes || []) as TPost["upvotes"];
+        const nextUpvotes = wasLiked
+          ? upvotes.filter((entry) => extractId(entry) !== userId)
+          : ([...upvotes, userId] as TPost["upvotes"]);
+        return { ...post, upvotes: nextUpvotes };
+      }),
     );
 
-    if (showAnimation && !liked) {
+    if (showAnimation && !wasLiked) {
       setShowHeartAnimation(postId);
       setTimeout(() => setShowHeartAnimation(null), 1000);
     }
+
+    castVote(
+      { voteType: "upvote", userId, postId },
+      {
+        onError: () => {
+          setPosts((prevPosts) =>
+            prevPosts.map((post) => {
+              if (post._id !== postId) return post;
+              const upvotes = (post.upvotes || []) as TPost["upvotes"];
+              const reverted = wasLiked
+                ? ([...upvotes, userId] as TPost["upvotes"])
+                : upvotes.filter((entry) => extractId(entry) !== userId);
+              return { ...post, upvotes: reverted };
+            }),
+          );
+        },
+      },
+    );
   };
 
   const handleDoubleTap = (postId: string) => {
@@ -123,8 +169,8 @@ export default function InfiniteScrollPosts({
     const lastTap = lastTapRef.current[postId] || 0;
 
     if (now - lastTap < 300) {
-      // Double tap detected
-      if (!likedPosts.includes(postId)) {
+      const target = posts.find((p) => p._id === postId);
+      if (!upvotesIncludeUser(target?.upvotes, user?._id)) {
         toggleLike(postId, true);
       }
     }
@@ -244,7 +290,7 @@ export default function InfiniteScrollPosts({
       className="space-y-4"
     >
       {posts.map((post, index) => {
-        const isLiked = likedPosts.includes(post._id);
+        const isLiked = upvotesIncludeUser(post.upvotes, user?._id);
         const isSaved = savedPosts.includes(post._id);
         const isExpanded = expandedPostIds.includes(post._id);
         const showingComments = showComments.includes(post._id);
@@ -429,7 +475,7 @@ export default function InfiniteScrollPosts({
               {/* Likes Count */}
               <div className="mt-2">
                 <p className="font-semibold text-sm text-gray-900 dark:text-white">
-                  {(post.upvotes?.length || 0) + (isLiked && !post.upvotes?.includes(post._id) ? 1 : 0)} likes
+                  {post.upvotes?.length || 0} {post.upvotes?.length === 1 ? "like" : "likes"}
                 </p>
               </div>
 

@@ -169,7 +169,7 @@ export const updatePost = async (payload: any) => {
 export const upvoteOrDownvote = async (payload: IUpdateVote) => {
   try {
     const { data }: AxiosResponse<ISinglePostResponseType> =
-      await axiosInstance.put(`/posts/vote`, payload);
+      await axiosInstance.post(`/posts/vote`, payload);
 
     revalidateTag("post");
 
