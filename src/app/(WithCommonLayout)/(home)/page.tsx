@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import Footer from "@/src/components/UI/Footer";
 import { useUser } from "@/src/context/user.provider";
+import { useGetMe } from "@/src/hooks/profile";
 import InfiniteScrollPosts from "@/src/components/post/newsfeedpost";
 import Stories from "@/src/components/UI/Stories";
 import Link from "next/link";
@@ -107,6 +108,10 @@ const upcomingEvents = [
 
 const Home: React.FC = () => {
   const { user } = useUser();
+  const { data: meResponse } = useGetMe(user?.email as string);
+  const me = meResponse?.data;
+  const followersCount = me?.followers?.length ?? user?.followers?.length ?? 0;
+  const followingCount = me?.following?.length ?? user?.following?.length ?? 0;
   const [selectedCategory, setSelectedCategory] = useState("");
   const [showCreatePost, setShowCreatePost] = useState(false);
 
@@ -154,13 +159,15 @@ const Home: React.FC = () => {
                   <div className="flex items-center gap-4 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
                     <div className="text-center">
                       <p className="font-bold text-gray-900 dark:text-white">
-                        {user.followers?.length || 0}
+                        {followersCount}
                       </p>
-                      <p className="text-xs text-gray-500">Followers</p>
+                      <p className="text-xs text-gray-500">
+                        {followersCount === 1 ? "Follower" : "Followers"}
+                      </p>
                     </div>
                     <div className="text-center">
                       <p className="font-bold text-gray-900 dark:text-white">
-                        {user.following?.length || 0}
+                        {followingCount}
                       </p>
                       <p className="text-xs text-gray-500">Following</p>
                     </div>
