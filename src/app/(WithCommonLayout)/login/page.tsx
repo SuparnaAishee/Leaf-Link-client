@@ -71,14 +71,6 @@ const LoginPage = () => {
               />
             </div>
 
-            <div className="flex items-center justify-end mt-2">
-              <Link
-                href="/register"
-                className="text-sm text-green-600 hover:text-green-700 font-medium transition-colors"
-              >
-                Forgot password?
-              </Link>
-            </div>
 
             <Button
               className="w-full mt-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl h-12 hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-md hover:shadow-lg"
