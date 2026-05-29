@@ -15,10 +15,15 @@ import {
   Carrot,
   Sparkles,
   Crown,
+  Calendar,
+  MapPin,
+  Users,
+  Clock,
 } from "lucide-react";
 import Footer from "@/src/components/UI/Footer";
 import { useUser } from "@/src/context/user.provider";
 import { useGetMe } from "@/src/hooks/profile";
+import { useUpcomingEvents } from "@/src/hooks/event";
 import InfiniteScrollPosts from "@/src/components/post/newsfeedpost";
 import Stories from "@/src/components/UI/Stories";
 import Landing from "@/src/components/UI/Landing";
@@ -39,6 +44,8 @@ const Home: React.FC = () => {
   const me = meResponse?.data;
   const followersCount = me?.followers?.length ?? user?.followers?.length ?? 0;
   const followingCount = me?.following?.length ?? user?.following?.length ?? 0;
+  const { data: eventsResponse } = useUpcomingEvents(!!user?.email);
+  const upcomingEvents: any[] = (eventsResponse as any)?.data || [];
   const [selectedCategory, setSelectedCategory] = useState("");
   const [showCreatePost, setShowCreatePost] = useState(false);
 
@@ -223,6 +230,66 @@ const Home: React.FC = () => {
           {/* Right Sidebar - aligned with navbar right icons */}
           <aside className="hidden xl:block w-64 2xl:w-72 flex-shrink-0">
             <div className="sticky top-[4.25rem] max-h-[calc(100vh-4.5rem)] overflow-y-auto scrollbar-hide space-y-3">
+            {/* Upcoming Events (real) */}
+            {upcomingEvents.length > 0 && (
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-green-500" />
+                    Upcoming events
+                  </h3>
+                  <Link href="/events" className="text-xs font-medium text-green-600 dark:text-green-400 hover:underline">
+                    See all
+                  </Link>
+                </div>
+                <div className="space-y-2">
+                  {upcomingEvents.slice(0, 3).map((ev) => {
+                    const d = new Date(ev.date);
+                    return (
+                      <Link
+                        key={ev._id}
+                        href={`/events/${ev._id}`}
+                        className="flex gap-3 p-2 -mx-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                      >
+                        <div className="shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 flex flex-col items-center justify-center">
+                          <span className="text-[9px] font-bold uppercase text-green-700 dark:text-green-300">
+                            {d.toLocaleDateString(undefined, { month: "short" })}
+                          </span>
+                          <span className="text-base font-extrabold text-gray-900 dark:text-white leading-none">
+                            {d.getDate()}
+                          </span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                            {ev.title}
+                          </p>
+                          <p className="text-[11px] text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-0.5">
+                            <Clock className="w-3 h-3" />
+                            {d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}
+                            {ev.location && (
+                              <>
+                                <MapPin className="w-3 h-3 ml-1" />
+                                <span className="truncate">{ev.location}</span>
+                              </>
+                            )}
+                          </p>
+                          <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-0.5 flex items-center gap-1">
+                            <Users className="w-3 h-3" />
+                            {ev.attendees?.length ?? 0} going
+                          </p>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+                <Link href="/events/create">
+                  <button className="w-full mt-3 py-2 text-sm font-medium text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors">
+                    + Host an event
+                  </button>
+                </Link>
+              </div>
+            )}
+
             {/* AI Plant Doctor Banner */}
             <Link href="/ai-garden">
               <div className="bg-gradient-to-br from-green-500 via-emerald-600 to-teal-600 rounded-2xl p-4 text-white relative overflow-hidden group cursor-pointer hover:shadow-xl hover:shadow-green-500/30 transition-all duration-300">

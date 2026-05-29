@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   Bell,
   AtSign,
+  Calendar,
   Check,
   Crown,
   Heart,
@@ -25,7 +26,7 @@ const BLANK_AVATAR =
 
 type N = {
   _id: string;
-  type: "follow" | "comment" | "reply" | "upvote" | "mention" | "premium";
+  type: "follow" | "comment" | "reply" | "upvote" | "mention" | "rsvp" | "premium";
   actor?: { _id: string; name: string; profilePhoto?: string };
   post?: { _id: string; title: string };
   comment?: { _id: string; comment: string };
@@ -46,6 +47,8 @@ const iconFor = (type: N["type"]) => {
       return <Heart className="w-4 h-4 text-rose-500" />;
     case "mention":
       return <AtSign className="w-4 h-4 text-purple-500" />;
+    case "rsvp":
+      return <Calendar className="w-4 h-4 text-rose-500" />;
     case "premium":
       return <Crown className="w-4 h-4 text-amber-500" />;
   }
@@ -64,6 +67,8 @@ const sentenceFor = (n: N) => {
       return `${actor} liked your post`;
     case "mention":
       return `${actor} mentioned you`;
+    case "rsvp":
+      return `${actor} RSVPed to your event`;
     case "premium":
       return n.message || "Premium activated";
   }

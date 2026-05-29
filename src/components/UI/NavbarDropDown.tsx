@@ -10,6 +10,7 @@ import {
 import { Avatar } from "@nextui-org/avatar";
 import { usePathname, useRouter } from "next/navigation";
 import {
+  Calendar,
   Crown,
   History,
   LogOut,
@@ -99,6 +100,16 @@ const NavbarDropDown = () => {
             onClick={() => go("/ai-garden/history")}
           >
             Scan history
+          </DropdownItem>
+        </DropdownSection>
+
+        <DropdownSection title="Community" showDivider>
+          <DropdownItem
+            key="events"
+            startContent={<Calendar className="w-4 h-4 text-rose-500" />}
+            onClick={() => go("/events")}
+          >
+            Events
           </DropdownItem>
         </DropdownSection>
 

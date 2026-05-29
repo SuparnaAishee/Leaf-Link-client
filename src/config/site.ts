@@ -7,6 +7,7 @@ import {
   Sprout,
   History,
   Bell,
+  Calendar,
 } from "lucide-react";
 
 export type SiteConfig = typeof siteConfig;
@@ -22,6 +23,7 @@ export const siteConfig = {
   navMenuItems: [
     { label: "Home", href: "/", icon: Home },
     { label: "Notifications", href: "/notifications", icon: Bell },
+    { label: "Events", href: "/events", icon: Calendar },
     { label: "Create Post", href: "/profile/create-post", icon: PlusSquare },
     { label: "AI Plant Doctor", href: "/ai-garden", icon: Sparkles },
     { label: "My Garden", href: "/my-garden", icon: Sprout },
