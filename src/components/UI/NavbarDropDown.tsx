@@ -11,10 +11,12 @@ import { Avatar } from "@nextui-org/avatar";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Crown,
+  History,
   LogOut,
   PenSquare,
   ShieldCheck,
   Sparkles,
+  Sprout,
   Star,
   User,
 } from "lucide-react";
@@ -76,7 +78,14 @@ const NavbarDropDown = () => {
           </DropdownItem>
         </DropdownSection>
 
-        <DropdownSection title="Discover" showDivider>
+        <DropdownSection title="My garden" showDivider>
+          <DropdownItem
+            key="my-garden"
+            startContent={<Sprout className="w-4 h-4 text-green-600" />}
+            onClick={() => go("/my-garden")}
+          >
+            My Garden
+          </DropdownItem>
           <DropdownItem
             key="ai"
             startContent={<Sparkles className="w-4 h-4 text-green-500" />}
@@ -84,7 +93,17 @@ const NavbarDropDown = () => {
           >
             AI Plant Doctor
           </DropdownItem>
-          {isPremium ? (
+          <DropdownItem
+            key="ai-history"
+            startContent={<History className="w-4 h-4 text-emerald-500" />}
+            onClick={() => go("/ai-garden/history")}
+          >
+            Scan history
+          </DropdownItem>
+        </DropdownSection>
+
+        <DropdownSection title="Premium" showDivider>
+          {(isPremium ? (
             <DropdownItem
               key="premium-content"
               startContent={<Star className="w-4 h-4 text-amber-500" />}
@@ -100,7 +119,7 @@ const NavbarDropDown = () => {
             >
               Go Premium
             </DropdownItem>
-          )}
+          )) as any}
         </DropdownSection>
 
         {(isAdmin ? (

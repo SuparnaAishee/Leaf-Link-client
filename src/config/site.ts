@@ -4,6 +4,8 @@ import {
   User,
   PlusSquare,
   Sparkles,
+  Sprout,
+  History,
   Bell,
 } from "lucide-react";
 
@@ -22,6 +24,8 @@ export const siteConfig = {
     { label: "Notifications", href: "/notifications", icon: Bell },
     { label: "Create Post", href: "/profile/create-post", icon: PlusSquare },
     { label: "AI Plant Doctor", href: "/ai-garden", icon: Sparkles },
+    { label: "My Garden", href: "/my-garden", icon: Sprout },
+    { label: "Scan history", href: "/ai-garden/history", icon: History },
     { label: "Profile", href: "/profile", icon: User },
     { label: "About", href: "/about", icon: Info },
   ],

@@ -27,6 +27,7 @@ import {
   Home,
   PlusSquare,
   Sparkles,
+  Sprout,
 } from "lucide-react";
 
 export const Navbar = () => {
@@ -79,6 +80,15 @@ export const Navbar = () => {
             <Home className="w-5 h-5" />
           </NextLink>
         </NavbarItem>
+
+        {/* My Garden */}
+        {user?.email && (
+          <NavbarItem>
+            <NextLink href="/my-garden" className="nav-icon" aria-label="My Garden">
+              <Sprout className="w-5 h-5" />
+            </NextLink>
+          </NavbarItem>
+        )}
 
         {/* AI Plant Doctor — 2026 feature */}
         <NavbarItem>
@@ -150,10 +160,14 @@ export const Navbar = () => {
         <div className="mx-4 mt-2 flex flex-col gap-1">
           {/* Quick Actions for Mobile */}
           {user?.email && (
-            <div className="grid grid-cols-3 gap-2 mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
+            <div className="grid grid-cols-4 gap-2 mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
               <NextLink href="/" className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-white dark:hover:bg-gray-700 transition-colors">
                 <Home className="w-5 h-5 text-green-600" />
                 <span className="text-xs text-gray-600 dark:text-gray-400">Home</span>
+              </NextLink>
+              <NextLink href="/my-garden" className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-white dark:hover:bg-gray-700 transition-colors">
+                <Sprout className="w-5 h-5 text-green-600" />
+                <span className="text-xs text-gray-600 dark:text-gray-400">Garden</span>
               </NextLink>
               <NextLink href="/profile/create-post" className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-white dark:hover:bg-gray-700 transition-colors">
                 <PlusSquare className="w-5 h-5 text-gray-600 dark:text-gray-400" />

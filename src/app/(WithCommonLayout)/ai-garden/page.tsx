@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {
   Sparkles,
   Leaf,
@@ -18,7 +19,12 @@ import {
   Camera,
   ShieldCheck,
   Bot,
+  History,
+  Plus,
 } from "lucide-react";
+import { useUser } from "@/src/context/user.provider";
+import { useCreatePlant, useSaveScan } from "@/src/hooks/garden";
+import { uploadToCloudinary } from "@/src/utils/uploadToCloudinary";
 import {
   identifyPlant,
   diagnoseDisease,
@@ -139,15 +145,21 @@ function severityTone(severity: string) {
 
 export default function AiGardenPage() {
   const [tab, setTab] = useState<Tab>("identify");
+  const { user } = useUser();
+  const { mutate: saveScan } = useSaveScan();
+  const { mutate: createPlant, isPending: addingPlant } = useCreatePlant();
+  const [savedPlantId, setSavedPlantId] = useState<string | null>(null);
 
   // identify
   const [idImage, setIdImage] = useState<{ file: File; preview: string; base64: string } | null>(null);
+  const [idImageUrl, setIdImageUrl] = useState<string | null>(null);
   const [hint, setHint] = useState("");
   const [idResult, setIdResult] = useState<IdentifyResult | null>(null);
   const [idLoading, setIdLoading] = useState(false);
 
   // diagnose
   const [dxImage, setDxImage] = useState<{ file: File; preview: string; base64: string } | null>(null);
+  const [dxImageUrl, setDxImageUrl] = useState<string | null>(null);
   const [symptoms, setSymptoms] = useState("");
   const [dxResult, setDxResult] = useState<DiagnoseResult | null>(null);
   const [dxLoading, setDxLoading] = useState(false);
@@ -183,9 +195,12 @@ export default function AiGardenPage() {
       if (kind === "identify") {
         setIdImage({ file, preview, base64 });
         setIdResult(null);
+        setIdImageUrl(null);
+        setSavedPlantId(null);
       } else {
         setDxImage({ file, preview, base64 });
         setDxResult(null);
+        setDxImageUrl(null);
       }
     },
     [],
@@ -198,9 +213,24 @@ export default function AiGardenPage() {
     }
     setIdLoading(true);
     setIdResult(null);
+    setSavedPlantId(null);
     try {
       const r = await identifyPlant({ imageBase64: idImage?.base64, hint });
       setIdResult(r);
+      // Save the scan to history for logged-in users. Upload the image
+      // to Cloudinary first so the history page can show a thumbnail.
+      if (user?.email) {
+        let url: string | undefined;
+        if (idImage?.file) {
+          try {
+            url = await uploadToCloudinary(idImage.file, "image");
+            setIdImageUrl(url);
+          } catch {
+            // Non-fatal — we still want to save the result.
+          }
+        }
+        saveScan({ kind: "identify", imageUrl: url, hint, result: r });
+      }
     } catch (e) {
       toast.error((e as Error).message || "Identification failed");
     } finally {
@@ -218,11 +248,51 @@ export default function AiGardenPage() {
     try {
       const r = await diagnoseDisease({ imageBase64: dxImage?.base64, symptoms });
       setDxResult(r);
+      if (user?.email) {
+        let url: string | undefined;
+        if (dxImage?.file) {
+          try {
+            url = await uploadToCloudinary(dxImage.file, "image");
+            setDxImageUrl(url);
+          } catch {
+            // Non-fatal
+          }
+        }
+        saveScan({
+          kind: "diagnose",
+          imageUrl: url,
+          hint: symptoms,
+          result: r,
+        });
+      }
     } catch (e) {
       toast.error((e as Error).message || "Diagnosis failed");
     } finally {
       setDxLoading(false);
     }
+  };
+
+  const handleSaveToGarden = () => {
+    if (!user?.email) {
+      toast.error("Sign in to save plants to your garden.");
+      return;
+    }
+    if (!idResult) return;
+    createPlant(
+      {
+        name: idResult.name,
+        species: idResult.scientificName,
+        photo: idImageUrl || undefined,
+        notes: idResult.tips?.join("\n"),
+      },
+      {
+        onSuccess: (resp: any) => {
+          const id = resp?.data?._id;
+          if (id) setSavedPlantId(id);
+          toast.success(`${idResult.name} added to your garden 🌱`);
+        },
+      }
+    );
   };
 
   const sendChat = async () => {
@@ -277,6 +347,22 @@ export default function AiGardenPage() {
             Identify any plant from a photo, diagnose what&apos;s wrong with the sick ones, and chat
             with a gardening assistant that actually knows when to water.
           </p>
+          {user?.email && (
+            <div className="mt-5 flex items-center justify-center gap-3">
+              <Link href="/ai-garden/history">
+                <button className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/80 dark:bg-gray-800/80 border border-gray-200/60 dark:border-gray-700/60 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-white dark:hover:bg-gray-700 transition-colors shadow-sm">
+                  <History className="w-4 h-4 text-emerald-600" />
+                  Scan history
+                </button>
+              </Link>
+              <Link href="/my-garden">
+                <button className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/80 dark:bg-gray-800/80 border border-gray-200/60 dark:border-gray-700/60 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-white dark:hover:bg-gray-700 transition-colors shadow-sm">
+                  <Sprout className="w-4 h-4 text-green-600" />
+                  My Garden
+                </button>
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
@@ -434,6 +520,40 @@ export default function AiGardenPage() {
                       ))}
                     </ul>
                   </div>
+
+                  {user?.email && (
+                    <div className="mt-6 pt-5 border-t border-gray-100 dark:border-gray-700">
+                      {savedPlantId ? (
+                        <Link href="/my-garden">
+                          <button className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors">
+                            <CheckCircle2 className="w-4 h-4" />
+                            Added — open My Garden
+                          </button>
+                        </Link>
+                      ) : (
+                        <button
+                          onClick={handleSaveToGarden}
+                          disabled={addingPlant}
+                          className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-600 shadow-md hover:shadow-lg hover:from-green-600 hover:to-emerald-700 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                        >
+                          {addingPlant ? (
+                            <>
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                              Adding…
+                            </>
+                          ) : (
+                            <>
+                              <Plus className="w-4 h-4" />
+                              Save to my garden
+                            </>
+                          )}
+                        </button>
+                      )}
+                      <p className="mt-1.5 text-[11px] text-center text-gray-500 dark:text-gray-400">
+                        We&apos;ll track watering and remind you when it&apos;s due.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
