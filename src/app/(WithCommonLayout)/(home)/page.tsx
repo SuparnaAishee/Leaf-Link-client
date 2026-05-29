@@ -36,6 +36,7 @@ import { useUser } from "@/src/context/user.provider";
 import { useGetMe } from "@/src/hooks/profile";
 import InfiniteScrollPosts from "@/src/components/post/newsfeedpost";
 import Stories from "@/src/components/UI/Stories";
+import Landing from "@/src/components/UI/Landing";
 import Link from "next/link";
 
 const categories = [
@@ -107,7 +108,7 @@ const upcomingEvents = [
 ];
 
 const Home: React.FC = () => {
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
   const { data: meResponse } = useGetMe(user?.email as string);
   const me = meResponse?.data;
   const followersCount = me?.followers?.length ?? user?.followers?.length ?? 0;
@@ -122,6 +123,18 @@ const Home: React.FC = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user?.email) {
+    return <Landing />;
+  }
 
   return (
     <div className="min-h-screen">
