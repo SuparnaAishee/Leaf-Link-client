@@ -2,18 +2,9 @@ import React from "react";
 import Link from "next/link";
 import {
   Leaf,
-  Home,
-  User,
-  PenSquare,
-  Info,
   Mail,
   Heart,
-  Twitter,
-  Instagram,
-  Facebook,
-  Youtube,
   Send,
-  Smartphone,
 } from "lucide-react";
 
 const Footer = () => {
@@ -21,7 +12,7 @@ const Footer = () => {
     <footer className="w-full bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 mt-8">
       {/* Main Footer */}
       <div className="container mx-auto px-4 py-12 max-w-7xl">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-2 space-y-4">
             <div className="flex items-center gap-2">
@@ -35,21 +26,6 @@ const Footer = () => {
             <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-sm">
               Join the largest community of gardening enthusiasts. Share tips, discover new plants, and grow together.
             </p>
-            {/* Social Links */}
-            <div className="flex items-center gap-3 pt-2">
-              <a href="#" className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors group">
-                <Instagram className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-green-600" />
-              </a>
-              <a href="#" className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors group">
-                <Twitter className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-green-600" />
-              </a>
-              <a href="#" className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors group">
-                <Facebook className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-green-600" />
-              </a>
-              <a href="#" className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors group">
-                <Youtube className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-green-600" />
-              </a>
-            </div>
           </div>
 
           {/* Product */}
@@ -58,7 +34,8 @@ const Footer = () => {
             <ul className="space-y-3">
               {[
                 { label: "Features", href: "/about" },
-                { label: "Premium", href: "/pricing" },
+                { label: "Premium", href: "/profile/verify-profile" },
+                { label: "AI Plant Doctor", href: "/ai-garden" },
                 { label: "Community", href: "/" },
               ].map((item) => (
                 <li key={item.label}>
@@ -76,28 +53,8 @@ const Footer = () => {
             <ul className="space-y-3">
               {[
                 { label: "About", href: "/about" },
-                { label: "Blog", href: "/" },
-                { label: "Careers", href: "/about" },
-                { label: "Press", href: "/about" },
-              ].map((item) => (
-                <li key={item.label}>
-                  <Link href={item.href} className="text-sm text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors">
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Support */}
-          <div className="space-y-4">
-            <h3 className="font-semibold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Support</h3>
-            <ul className="space-y-3">
-              {[
-                { label: "Help Center", href: "/about" },
-                { label: "Safety", href: "/about" },
-                { label: "Privacy", href: "/about" },
-                { label: "Terms", href: "/about" },
+                { label: "Sign in", href: "/login" },
+                { label: "Create account", href: "/register" },
               ].map((item) => (
                 <li key={item.label}>
                   <Link href={item.href} className="text-sm text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors">
@@ -141,15 +98,9 @@ const Footer = () => {
             <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
               <p>&copy; 2025 LeafLink. All rights reserved.</p>
             </div>
-            <div className="flex items-center gap-4">
-              <a href="#" className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:text-green-600 transition-colors">
-                <Smartphone className="w-4 h-4" />
-                Get the app
-              </a>
-              <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                Made with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> for gardeners
-              </p>
-            </div>
+            <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
+              Made with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> for gardeners
+            </p>
           </div>
         </div>
       </div>

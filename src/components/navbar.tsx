@@ -15,6 +15,7 @@ import NextLink from "next/link";
 import { useUser } from "../context/user.provider";
 import NavbarDropDown from "./UI/NavbarDropDown";
 import NavSearch from "./UI/NavSearch";
+import NotificationBell from "./UI/NotificationBell";
 import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/theme-switch";
 import { useRouter, usePathname } from "next/navigation";
@@ -25,7 +26,6 @@ import {
   Leaf,
   Home,
   PlusSquare,
-  Heart,
   Sparkles,
 } from "lucide-react";
 
@@ -104,6 +104,13 @@ export const Navbar = () => {
           </NavbarItem>
         )}
 
+        {/* Notifications */}
+        {user?.email && (
+          <NavbarItem>
+            <NotificationBell />
+          </NavbarItem>
+        )}
+
         {/* Theme Switch */}
         <NavbarItem>
           <ThemeSwitch />
@@ -152,11 +159,10 @@ export const Navbar = () => {
                 <PlusSquare className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                 <span className="text-xs text-gray-600 dark:text-gray-400">Create</span>
               </NextLink>
-              <button className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-white dark:hover:bg-gray-700 transition-colors relative">
-                <Heart className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                <span className="text-xs text-gray-600 dark:text-gray-400">Activity</span>
-                <span className="absolute top-1 right-3 w-2 h-2 bg-red-500 rounded-full"></span>
-              </button>
+              <NextLink href="/ai-garden" className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-white dark:hover:bg-gray-700 transition-colors">
+                <Sparkles className="w-5 h-5 text-green-600" />
+                <span className="text-xs text-gray-600 dark:text-gray-400">AI</span>
+              </NextLink>
             </div>
           )}
 

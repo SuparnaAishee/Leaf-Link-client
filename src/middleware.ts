@@ -8,7 +8,7 @@ const AuthRoutes = ["/login", "/register"];
 type Role = keyof typeof roleBasedRoutes;
 
 const roleBasedRoutes = {
-  USER: [/^\/profile/, /^\/postAction/],
+  USER: [/^\/profile/, /^\/notifications/],
   ADMIN: [/^\/admin/],
 };
 
@@ -47,8 +47,9 @@ export const config = {
     "/profile",
     "/profile/:page*",
     "/admin",
+    "/admin/:page*",
     "/login",
     "/register",
-    "/postAction",
+    "/notifications",
   ],
 };

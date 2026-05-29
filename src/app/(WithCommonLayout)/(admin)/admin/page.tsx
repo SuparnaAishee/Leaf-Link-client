@@ -109,8 +109,7 @@ const AdminDashboard = () => {
   const quickActions = [
     { title: "User Management", href: "/admin/user-management", icon: Users, description: "Manage user accounts and roles" },
     { title: "Payment History", href: "/admin/payment-history", icon: CreditCard, description: "View payment transactions" },
-    { title: "Content Moderation", href: "/admin/payment-management", icon: Eye, description: "Review reported content" },
-    { title: "Analytics", href: "/admin/profile-update", icon: BarChart3, description: "View detailed analytics" },
+    { title: "Edit Profile", href: "/admin/profile-update", icon: BarChart3, description: "Update your admin profile" },
   ];
 
   const getActivityIcon = (type: string) => {

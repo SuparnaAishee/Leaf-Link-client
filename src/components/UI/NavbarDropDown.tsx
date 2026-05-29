@@ -13,7 +13,6 @@ import {
   Crown,
   LogOut,
   PenSquare,
-  Settings,
   ShieldCheck,
   Sparkles,
   Star,
@@ -102,16 +101,6 @@ const NavbarDropDown = () => {
               Go Premium
             </DropdownItem>
           )}
-        </DropdownSection>
-
-        <DropdownSection showDivider={isAdmin}>
-          <DropdownItem
-            key="settings"
-            startContent={<Settings className="w-4 h-4" />}
-            onClick={() => go("/profile/settings")}
-          >
-            Settings
-          </DropdownItem>
         </DropdownSection>
 
         {(isAdmin ? (

@@ -1,6 +1,6 @@
 export const userLinks = [
-  { href: "/profile", label: "Posts" },
-  { href: "/profile/settings", label: "Settings" },
+  { href: "/profile", label: "Profile" },
+  { href: "/profile/updateProfile", label: "Edit Profile" },
 ];
 
 export const adminLinks = [{ href: "/admin", label: "Admin" }];

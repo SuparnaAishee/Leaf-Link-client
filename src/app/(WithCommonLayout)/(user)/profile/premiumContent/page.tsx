@@ -11,29 +11,6 @@ export default function PostsPage() {
   const [likedPosts, setLikedPosts] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [expandedPostIds, setExpandedPostIds] = useState<string[]>([]);
-  const [isPremiumUser, setIsPremiumUser] = useState<boolean>(false); // State for user status
-
-  // Fetch user status on component mount (you may need to adjust this based on your auth implementation)
-  useEffect(() => {
-    const checkUserStatus = async () => {
-      try {
-        const res = await fetch(
-          "https://gardening-tips-platform-server-three.vercel.app/api/user/status"
-        ); // Endpoint to check user status
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch user status");
-        }
-        const data = await res.json();
-
-        setIsPremiumUser(data.isPremium); // Assuming the response contains a field isPremium
-      } catch (error) {
-        console.error("Error fetching user status:", error);
-      }
-    };
-
-    checkUserStatus();
-  }, []);
 
   const fetchPosts = async (searchQuery = "", categoryQuery = "") => {
     try {

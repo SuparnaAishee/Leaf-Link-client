@@ -22,8 +22,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useUser } from "@/src/context/user.provider";
-import { useAddVote } from "@/src/hooks/post";
+import { useAddVote, useAddBookmark } from "@/src/hooks/post";
+import { useGetMe } from "@/src/hooks/profile";
 import { useFollowUnfollow } from "@/src/hooks/follow";
+import { useQueryClient } from "@tanstack/react-query";
 import PostComments from "./PostComments";
 import ShareModal from "./ShareModal";
 import PostSkeleton from "./PostSkeleton";
@@ -53,8 +55,11 @@ export default function InfiniteScrollPosts({
 }) {
   const router = useRouter();
   const { user } = useUser();
+  const queryClient = useQueryClient();
   const { mutate: castVote } = useAddVote();
+  const { mutate: toggleBookmark } = useAddBookmark();
   const { mutate: toggleFollow } = useFollowUnfollow();
+  const { data: meResponse } = useGetMe(user?.email as string);
   const [followOverrides, setFollowOverrides] = useState<
     Record<string, boolean>
   >({});
@@ -64,7 +69,14 @@ export default function InfiniteScrollPosts({
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedPostIds, setExpandedPostIds] = useState<string[]>([]);
-  const [savedPosts, setSavedPosts] = useState<string[]>([]);
+  const [savedOverrides, setSavedOverrides] = useState<Record<string, boolean>>({});
+  const meFavoriteIds = ((meResponse?.data as any)?.favorites || []).map((f: any) =>
+    extractId(f),
+  ).filter(Boolean) as string[];
+  const isPostSaved = (postId: string) =>
+    postId in savedOverrides
+      ? savedOverrides[postId]
+      : meFavoriteIds.includes(postId);
   const [showComments, setShowComments] = useState<string[]>([]);
   const [showHeartAnimation, setShowHeartAnimation] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -240,10 +252,22 @@ export default function InfiniteScrollPosts({
   };
 
   const toggleSave = (postId: string) => {
-    setSavedPosts((prev) =>
-      prev.includes(postId)
-        ? prev.filter((id) => id !== postId)
-        : [...prev, postId]
+    if (!user?._id) {
+      toast.error("Please log in to save posts");
+      return;
+    }
+    const wasSaved = isPostSaved(postId);
+    setSavedOverrides((prev) => ({ ...prev, [postId]: !wasSaved }));
+    toggleBookmark(
+      { postId },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["user"] });
+        },
+        onError: () => {
+          setSavedOverrides((prev) => ({ ...prev, [postId]: wasSaved }));
+        },
+      },
     );
   };
 
@@ -339,7 +363,7 @@ export default function InfiniteScrollPosts({
     >
       {posts.map((post, index) => {
         const isLiked = upvotesIncludeUser(post.upvotes, user?._id);
-        const isSaved = savedPosts.includes(post._id);
+        const isSaved = isPostSaved(post._id);
         const isExpanded = expandedPostIds.includes(post._id);
         const showingComments = showComments.includes(post._id);
         const userName = typeof post.user === "string" ? "Anonymous" : post.user.name;

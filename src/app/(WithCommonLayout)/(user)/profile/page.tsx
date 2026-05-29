@@ -178,8 +178,8 @@ export default function ProfilePage() {
                           Create Post
                         </button>
                       </Link>
-                      <Link href="/profile/settings">
-                        <button className="p-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm">
+                      <Link href="/profile/updateProfile">
+                        <button className="p-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm" aria-label="Edit profile">
                           <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                         </button>
                       </Link>
@@ -351,16 +351,55 @@ export default function ProfilePage() {
 
         {/* Saved Tab */}
         {activeTab === "saved" && (
-          <div className="py-16 text-center">
-            <div className="w-20 h-20 mx-auto mb-4 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-              <Bookmark className="w-10 h-10 text-gray-400" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              Save Posts
-            </h3>
-            <p className="text-gray-500 dark:text-gray-400">
-              Posts you save will appear here
-            </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pb-8">
+            {((me as any)?.favorites?.length ?? 0) > 0 ? (
+              ((me as any).favorites as TPost[]).map((post) => (
+                <div
+                  key={post._id}
+                  className="relative aspect-square bg-gray-100 dark:bg-gray-800 rounded-2xl overflow-hidden cursor-pointer group"
+                  onClick={() => setShowPostDetail(post)}
+                >
+                  {post.imageUrl ? (
+                    <img
+                      src={post.imageUrl}
+                      alt={post.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30">
+                      <Leaf className="w-12 h-12 text-green-400" />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <div className="flex items-center gap-6 text-white">
+                      <span className="flex items-center gap-1">
+                        <Heart className="w-5 h-5 fill-current" />
+                        {post.upvotes?.length || 0}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <MessageCircle className="w-5 h-5" />
+                        {post.comments?.length || 0}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="absolute top-2 right-2 p-1.5 bg-black/40 backdrop-blur-sm rounded-full">
+                    <BookmarkCheck className="w-3.5 h-3.5 text-white fill-white" />
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full py-16 text-center">
+                <div className="w-20 h-20 mx-auto mb-4 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+                  <Bookmark className="w-10 h-10 text-gray-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  No saved posts yet
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400">
+                  Tap the bookmark on any post to save it for later.
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>

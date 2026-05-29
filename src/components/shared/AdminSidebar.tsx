@@ -1,6 +1,5 @@
 "use client";
 import {
-  GalleryThumbnails,
   HistoryIcon,
   LayoutDashboard,
   User,
@@ -29,25 +28,11 @@ const AdminSidebar = () => {
         <span>User Management</span>
       </Link>
       <Link
-        className={`flex items-center gap-3 hover-nav-item px-3 py-2 ${pathname === "/admin/post-management" ? "bg-[#a8b3cf33]" : ""}`}
-        href="/admin/post-management"
-      >
-        <GalleryThumbnails size={18} />
-        <span>Post Management</span>
-      </Link>
-      <Link
         className={`flex items-center gap-3 hover-nav-item px-3 py-2 ${pathname === "/admin/payment-history" ? "bg-[#a8b3cf33]" : ""}`}
         href="/admin/payment-history"
       >
         <HistoryIcon size={18} />
         <span>Payment History</span>
-      </Link>
-      <Link
-        className={`flex items-center gap-3 hover-nav-item px-3 py-2 ${pathname === "/admin/payment-management" ? "bg-[#a8b3cf33]" : ""}`}
-        href="/admin/payment-management"
-      >
-        <HistoryIcon size={18} />
-        <span>Payment Management</span>
       </Link>
       <Link
         className={`flex items-center gap-3 hover-nav-item px-3 py-2 ${pathname === "/admin/profile-update" ? "bg-[#a8b3cf33]" : ""}`}
