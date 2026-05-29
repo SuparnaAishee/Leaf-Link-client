@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useUser } from "@/src/context/user.provider";
 import { useAddComment, useGetCommentsByPost } from "@/src/hooks/comment";
 import { IComment } from "@/src/types/comment";
+import { RichText } from "./RichText";
 
 const BLANK_AVATAR =
   "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
@@ -276,7 +277,7 @@ function CommentRow({
             {name}
           </Link>
           <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap break-words">
-            {comment.comment}
+            <RichText>{comment.comment}</RichText>
           </p>
         </div>
         <div className="flex items-center gap-3 mt-1 ml-1">

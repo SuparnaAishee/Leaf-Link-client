@@ -29,6 +29,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import PostComments from "./PostComments";
 import ShareModal from "./ShareModal";
 import PostSkeleton from "./PostSkeleton";
+import { RichText } from "./RichText";
 
 const extractId = (entry: unknown): string | null => {
   if (!entry) return null;
@@ -490,10 +491,10 @@ export default function InfiniteScrollPosts({
               {post.description && (
                 <div className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                   {isExpanded || post.description.length <= 150 ? (
-                    <p>{post.description}</p>
+                    <p><RichText>{post.description}</RichText></p>
                   ) : (
                     <p>
-                      {post.description.slice(0, 150)}...
+                      <RichText>{post.description.slice(0, 150)}</RichText>...
                       <button
                         onClick={() => toggleExpand(post._id)}
                         className="text-gray-500 dark:text-gray-400 font-medium ml-1 hover:text-green-600"

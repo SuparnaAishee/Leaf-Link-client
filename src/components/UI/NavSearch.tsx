@@ -10,6 +10,8 @@ import {
   UserCheck,
   Verified,
   Loader2,
+  FileText,
+  Leaf,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -17,6 +19,7 @@ import envConfig from "@/src/config/envConfig";
 import { useUser } from "@/src/context/user.provider";
 import { useFollowUnfollow } from "@/src/hooks/follow";
 import { TUser } from "@/src/types";
+import { TPost } from "@/src/types/post";
 
 const BLANK_AVATAR =
   "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
@@ -36,6 +39,7 @@ const NavSearch: React.FC<Props> = ({
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [results, setResults] = useState<TUser[]>([]);
+  const [postResults, setPostResults] = useState<TPost[]>([]);
   const [loading, setLoading] = useState(false);
   const [followOverrides, setFollowOverrides] = useState<
     Record<string, boolean>
@@ -47,22 +51,40 @@ const NavSearch: React.FC<Props> = ({
     const trimmed = query.trim();
     if (!trimmed) {
       setResults([]);
+      setPostResults([]);
       setLoading(false);
       return;
     }
     setLoading(true);
     const id = setTimeout(async () => {
       try {
-        const { data } = await axios.get(`${envConfig.baseApi}/users`, {
-          params: { searchTerm: trimmed, page: 1, limit: 6 },
-        });
-        if (data?.success && Array.isArray(data?.data?.users)) {
-          setResults(data.data.users);
-        } else {
-          setResults([]);
-        }
+        const isTagQuery = trimmed.startsWith("#");
+        const tagOnly = isTagQuery ? trimmed.slice(1) : trimmed;
+        const [usersRes, postsRes] = await Promise.all([
+          isTagQuery
+            ? Promise.resolve({ data: { success: true, data: { users: [] } } })
+            : axios.get(`${envConfig.baseApi}/users`, {
+                params: { searchTerm: trimmed, page: 1, limit: 5 },
+              }),
+          axios.get(`${envConfig.baseApi}/posts`, {
+            params: { searchTerm: tagOnly, page: 1, limit: 5 },
+          }),
+        ]);
+
+        const users =
+          usersRes?.data?.success && Array.isArray(usersRes.data?.data?.users)
+            ? usersRes.data.data.users
+            : [];
+        const posts =
+          postsRes?.data?.success && Array.isArray(postsRes.data?.data)
+            ? postsRes.data.data
+            : [];
+
+        setResults(users);
+        setPostResults(posts);
       } catch {
         setResults([]);
+        setPostResults([]);
       } finally {
         setLoading(false);
       }
@@ -164,23 +186,25 @@ const NavSearch: React.FC<Props> = ({
               <Loader2 className="w-4 h-4 animate-spin" />
               Searching…
             </div>
-          ) : results.length === 0 ? (
+          ) : results.length === 0 && postResults.length === 0 ? (
             <div className="px-4 py-8 text-center">
               <div className="w-10 h-10 mx-auto rounded-full bg-green-50 dark:bg-green-900/30 flex items-center justify-center mb-2">
                 <Search className="w-4 h-4 text-green-600" />
               </div>
               <p className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                No gardeners match that
+                No matches
               </p>
               <p className="text-xs text-gray-500 mt-1">
-                Try a different name.
+                Try a different name or post keyword.
               </p>
             </div>
           ) : (
             <ul className="py-2">
-              <li className="px-4 pb-1 text-[10px] uppercase tracking-wider text-gray-500 font-semibold">
-                Gardeners
-              </li>
+              {results.length > 0 && (
+                <li className="px-4 pb-1 pt-1 text-[10px] uppercase tracking-wider text-gray-500 font-semibold">
+                  Gardeners
+                </li>
+              )}
               {results.map((u) => {
                 const isMe = u._id === user?._id;
                 const following = isFollowing(u);
@@ -241,6 +265,52 @@ const NavSearch: React.FC<Props> = ({
                         )}
                       </button>
                     )}
+                  </li>
+                );
+              })}
+
+              {postResults.length > 0 && (
+                <li className="px-4 pt-3 pb-1 text-[10px] uppercase tracking-wider text-gray-500 font-semibold border-t border-gray-100 dark:border-gray-700 mt-1">
+                  Posts
+                </li>
+              )}
+              {postResults.map((post) => {
+                const tag = (post.description || "").match(/#([a-zA-Z0-9_]+)/)?.[1];
+                const href = tag
+                  ? `/tag/${encodeURIComponent(tag.toLowerCase())}`
+                  : "/";
+                return (
+                  <li
+                    key={post._id}
+                    className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                  >
+                    <Link
+                      href={href}
+                      onClick={() => setOpen(false)}
+                      className="flex items-start gap-3 px-4 py-2.5"
+                    >
+                      <div className="shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 flex items-center justify-center overflow-hidden">
+                        {post.imageUrl ? (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img
+                            src={post.imageUrl}
+                            alt={post.title}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <FileText className="w-4 h-4 text-green-600" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-sm text-gray-900 dark:text-white truncate">
+                          {post.title}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate flex items-center gap-1">
+                          <Leaf className="w-3 h-3 text-green-500" />
+                          {post.category}
+                        </p>
+                      </div>
+                    </Link>
                   </li>
                 );
               })}

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import {
   Bell,
+  AtSign,
   Check,
   Crown,
   Heart,
@@ -24,7 +25,7 @@ const BLANK_AVATAR =
 
 type N = {
   _id: string;
-  type: "follow" | "comment" | "reply" | "upvote" | "premium";
+  type: "follow" | "comment" | "reply" | "upvote" | "mention" | "premium";
   actor?: { _id: string; name: string; profilePhoto?: string };
   post?: { _id: string; title: string };
   comment?: { _id: string; comment: string };
@@ -43,6 +44,8 @@ const iconFor = (type: N["type"]) => {
       return <Reply className="w-4 h-4 text-emerald-500" />;
     case "upvote":
       return <Heart className="w-4 h-4 text-rose-500" />;
+    case "mention":
+      return <AtSign className="w-4 h-4 text-purple-500" />;
     case "premium":
       return <Crown className="w-4 h-4 text-amber-500" />;
   }
@@ -59,6 +62,8 @@ const sentenceFor = (n: N) => {
       return `${actor} replied to your comment`;
     case "upvote":
       return `${actor} liked your post`;
+    case "mention":
+      return `${actor} mentioned you`;
     case "premium":
       return n.message || "Premium activated";
   }
