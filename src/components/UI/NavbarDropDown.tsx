@@ -13,7 +13,6 @@ import {
   Crown,
   LogOut,
   PenSquare,
-  Search,
   Settings,
   ShieldCheck,
   Sparkles,
@@ -79,13 +78,6 @@ const NavbarDropDown = () => {
         </DropdownSection>
 
         <DropdownSection title="Discover" showDivider>
-          <DropdownItem
-            key="search"
-            startContent={<Search className="w-4 h-4" />}
-            onClick={() => go("/profile/searchUser")}
-          >
-            Find gardeners
-          </DropdownItem>
           <DropdownItem
             key="ai"
             startContent={<Sparkles className="w-4 h-4 text-green-500" />}

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -12,10 +11,10 @@ import {
 } from "@nextui-org/navbar";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
-import clsx from "clsx";
 
 import { useUser } from "../context/user.provider";
 import NavbarDropDown from "./UI/NavbarDropDown";
+import NavSearch from "./UI/NavSearch";
 import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/theme-switch";
 import { useRouter, usePathname } from "next/navigation";
@@ -24,14 +23,9 @@ import { protectedRoutes } from "@/src/constant";
 import {
   UserIcon,
   Leaf,
-  Search,
-  Bell,
-  MessageCircle,
   Home,
-  Compass,
   PlusSquare,
   Heart,
-  X,
   Sparkles,
 } from "lucide-react";
 
@@ -39,14 +33,6 @@ export const Navbar = () => {
   const { user, setIsLoading: userLoading } = useUser();
   const router = useRouter();
   const pathname = usePathname();
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const submitSearch = (q: string) => {
-    const term = q.trim();
-    if (!term) return;
-    router.push(`/profile/searchUser?q=${encodeURIComponent(term)}`);
-  };
 
   const handleLogOut = () => {
     logout();
@@ -82,27 +68,7 @@ export const Navbar = () => {
 
       {/* Center - Search Bar */}
       <NavbarContent className="hidden md:flex flex-1 max-w-md" justify="center">
-        <div className="relative w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search gardeners, posts, tips..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") submitSearch(searchQuery);
-            }}
-            className="w-full pl-10 pr-4 py-2.5 bg-gray-100 dark:bg-gray-800 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:bg-white dark:focus:bg-gray-700 transition-all duration-300 text-gray-700 dark:text-gray-200 placeholder-gray-500"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full transition-colors"
-            >
-              <X className="w-3 h-3 text-gray-500" />
-            </button>
-          )}
-        </div>
+        <NavSearch placeholder="Search gardeners…" />
       </NavbarContent>
 
       {/* Right Side - Navigation Icons */}
@@ -111,13 +77,6 @@ export const Navbar = () => {
         <NavbarItem>
           <NextLink href="/" className="nav-icon nav-icon-active">
             <Home className="w-5 h-5" />
-          </NextLink>
-        </NavbarItem>
-
-        {/* Explore */}
-        <NavbarItem>
-          <NextLink href="/profile/searchUser" className="nav-icon">
-            <Compass className="w-5 h-5" />
           </NextLink>
         </NavbarItem>
 
@@ -168,14 +127,8 @@ export const Navbar = () => {
         )}
       </NavbarContent>
 
-      {/* Mobile - Search Icon & Menu Toggle */}
+      {/* Mobile - Theme & Menu Toggle */}
       <NavbarContent className="sm:hidden basis-1 pl-4 gap-2" justify="end">
-        <button
-          onClick={() => setSearchOpen(!searchOpen)}
-          className="nav-icon"
-        >
-          <Search className="w-5 h-5" />
-        </button>
         <ThemeSwitch />
         <NavbarMenuToggle className="text-green-600" />
       </NavbarContent>
@@ -184,27 +137,16 @@ export const Navbar = () => {
       <NavbarMenu className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl pt-6">
         {/* Mobile Search */}
         <div className="px-4 mb-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
+          <NavSearch placeholder="Search gardeners…" variant="menu" />
         </div>
 
         <div className="mx-4 mt-2 flex flex-col gap-1">
           {/* Quick Actions for Mobile */}
           {user?.email && (
-            <div className="grid grid-cols-4 gap-2 mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
+            <div className="grid grid-cols-3 gap-2 mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
               <NextLink href="/" className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-white dark:hover:bg-gray-700 transition-colors">
                 <Home className="w-5 h-5 text-green-600" />
                 <span className="text-xs text-gray-600 dark:text-gray-400">Home</span>
-              </NextLink>
-              <NextLink href="/profile/searchUser" className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-white dark:hover:bg-gray-700 transition-colors">
-                <Compass className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                <span className="text-xs text-gray-600 dark:text-gray-400">Explore</span>
               </NextLink>
               <NextLink href="/profile/create-post" className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-white dark:hover:bg-gray-700 transition-colors">
                 <PlusSquare className="w-5 h-5 text-gray-600 dark:text-gray-400" />
