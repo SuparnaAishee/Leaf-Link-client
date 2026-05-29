@@ -1,15 +1,12 @@
 "use server";
 
-import axios from "axios";
 import { FieldValues } from "react-hook-form";
-import envConfig from "@/src/config/envConfig";
+
+import axiosInstance from "@/src/lib/AxiosInstance";
 
 export const updateProfile = async (payload: FieldValues) => {
   try {
-    const { data }: any = await axios.put(
-      `${envConfig.baseApi}/profile/update`,
-      payload
-    );
+    const { data }: any = await axiosInstance.put("/profile/update", payload);
 
     if (data?.success) {
       return data;
@@ -23,10 +20,7 @@ export const updateProfile = async (payload: FieldValues) => {
 
 export const verifyProfile = async (payload: any) => {
   try {
-    const { data }: any = await axios.post(
-      `${envConfig.baseApi}/verify-profile`,
-      payload
-    );
+    const { data }: any = await axiosInstance.post("/verify-profile", payload);
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message);
