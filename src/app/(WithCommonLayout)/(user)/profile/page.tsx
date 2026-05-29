@@ -6,7 +6,6 @@ import {
   MessageCircle,
   Bookmark,
   Share2,
-  MoreHorizontal,
   Settings,
   UserPlus,
   UserCheck,
@@ -15,17 +14,11 @@ import {
   Camera,
   Grid3X3,
   BookmarkCheck,
-  MapPin,
   Calendar,
-  Link as LinkIcon,
   Verified,
   Leaf,
-  Sprout,
-  Trophy,
-  Flame,
   Plus,
   X,
-  Send,
   Trash2,
 } from "lucide-react";
 import axios from "axios";
@@ -45,6 +38,8 @@ export default function ProfilePage() {
   const me = meResponse?.data;
   const followersCount = me?.followers?.length ?? user?.followers?.length ?? 0;
   const followingCount = me?.following?.length ?? user?.following?.length ?? 0;
+  const joinedAt = (me as any)?.createdAt || (user as any)?.createdAt;
+  const bio = (me as any)?.bio || (user as any)?.bio;
   const [posts, setPosts] = useState<TPost[]>([]);
   const [activeTab, setActiveTab] = useState("posts");
   const [isFollowing, setIsFollowing] = useState(false);
@@ -53,15 +48,6 @@ export default function ProfilePage() {
   const [showPostDetail, setShowPostDetail] = useState<TPost | null>(null);
   const [likedPosts, setLikedPosts] = useState<string[]>([]);
   const [savedPosts, setSavedPosts] = useState<string[]>([]);
-
-  const gardenStats = {
-    plants: 24,
-    harvests: 12,
-    streak: 45,
-    level: 3,
-    xp: 75,
-    nextLevel: 100,
-  };
 
   useEffect(() => {
     fetchUserData();
@@ -232,25 +218,27 @@ export default function ProfilePage() {
 
           {/* Bio */}
           <div className="mt-4 max-w-2xl">
-            <p className="text-gray-700 dark:text-gray-300">
-              {user?.bio || "Passionate gardener sharing tips and tricks for growing beautiful plants. Join me on my green journey! 🌱🌻🍅"}
-            </p>
-            <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-gray-500 dark:text-gray-400">
-              <span className="flex items-center gap-1">
-                <MapPin className="w-4 h-4" />
-                Garden City
-              </span>
-              <span className="flex items-center gap-1">
+            {bio ? (
+              <p className="text-gray-700 dark:text-gray-300">{bio}</p>
+            ) : (
+              <Link
+                href="/profile/updateProfile"
+                className="inline-flex items-center gap-1.5 text-sm text-green-600 dark:text-green-400 hover:underline"
+              >
+                <Edit3 className="w-3.5 h-3.5" />
+                Add a bio to introduce yourself
+              </Link>
+            )}
+            {joinedAt && (
+              <div className="mt-3 text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                Joined {new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })}
-              </span>
-              <span className="flex items-center gap-1">
-                <LinkIcon className="w-4 h-4" />
-                <a href="#" className="text-green-600 dark:text-green-400 hover:underline">
-                  leaflink.com/{user?.name?.toLowerCase().replace(/\s/g, "")}
-                </a>
-              </span>
-            </div>
+                Joined{" "}
+                {new Date(joinedAt).toLocaleDateString("en-US", {
+                  month: "long",
+                  year: "numeric",
+                })}
+              </div>
+            )}
           </div>
 
           {/* Stats */}
@@ -275,51 +263,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Garden Progress */}
-          <div className="mt-6 p-4 bg-white dark:bg-gray-800 rounded-2xl border border-green-100 dark:border-gray-700 shadow-sm">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg">
-                  <Leaf className="w-4 h-4 text-white" />
-                </div>
-                <span className="font-semibold text-gray-900 dark:text-white">
-                  Garden Level {gardenStats.level}
-                </span>
-              </div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                {gardenStats.xp}/{gardenStats.nextLevel} XP
-              </span>
-            </div>
-            <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2.5">
-              <div
-                className="bg-gradient-to-r from-green-500 to-emerald-600 h-2.5 rounded-full transition-all duration-500"
-                style={{ width: `${(gardenStats.xp / gardenStats.nextLevel) * 100}%` }}
-              />
-            </div>
-            <div className="flex items-center justify-around mt-4">
-              <div className="text-center">
-                <div className="flex items-center justify-center w-10 h-10 mx-auto mb-1 bg-green-100 dark:bg-green-900/30 rounded-full">
-                  <Sprout className="w-5 h-5 text-green-600" />
-                </div>
-                <p className="font-bold text-gray-900 dark:text-white">{gardenStats.plants}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Plants</p>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center w-10 h-10 mx-auto mb-1 bg-amber-100 dark:bg-amber-900/30 rounded-full">
-                  <Trophy className="w-5 h-5 text-amber-600" />
-                </div>
-                <p className="font-bold text-gray-900 dark:text-white">{gardenStats.harvests}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Harvests</p>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center w-10 h-10 mx-auto mb-1 bg-orange-100 dark:bg-orange-900/30 rounded-full">
-                  <Flame className="w-5 h-5 text-orange-600" />
-                </div>
-                <p className="font-bold text-gray-900 dark:text-white">{gardenStats.streak}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Day Streak</p>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Tabs */}
