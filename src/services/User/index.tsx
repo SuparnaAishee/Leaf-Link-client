@@ -5,7 +5,8 @@ import { IUpdateUserData } from "@/src/types";
 
 export const getAllUsers = async () => {
   try {
-    const { data }: any = await axiosInstance.get("/users");
+    // Pull a high limit so the admin panel can show/aggregate every user on one page.
+    const { data }: any = await axiosInstance.get("/users?limit=1000");
 
     return data;
   } catch (error: any) {

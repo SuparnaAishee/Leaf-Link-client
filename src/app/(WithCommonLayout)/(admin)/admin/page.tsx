@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Users,
@@ -13,41 +12,48 @@ import {
   Activity,
   UserCheck,
   UserX,
-  Eye,
   BarChart3,
-  Calendar,
-  ArrowUpRight,
-  ArrowDownRight,
+  Loader2,
 } from "lucide-react";
 
+import { useAdminStats } from "@/src/hooks/meta";
+
+type TActivity = {
+  type: string;
+  action: string;
+  user: string;
+  time: string;
+};
+
+const timeAgo = (date: string) => {
+  const diff = Date.now() - new Date(date).getTime();
+  const mins = Math.floor(diff / 60000);
+
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins} min${mins === 1 ? "" : "s"} ago`;
+  const hours = Math.floor(mins / 60);
+
+  if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+  const days = Math.floor(hours / 24);
+
+  return `${days} day${days === 1 ? "" : "s"} ago`;
+};
+
 const AdminDashboard = () => {
-  const [stats, setStats] = useState({
+  const { data, isLoading, isError } = useAdminStats();
+
+  const stats = data?.data ?? {
     totalUsers: 0,
     activeUsers: 0,
     totalPosts: 0,
     premiumUsers: 0,
     totalRevenue: 0,
     newUsersThisMonth: 0,
-  });
+    recentActivity: [],
+  };
 
-  const [recentActivity, setRecentActivity] = useState([
-    { id: 1, action: "New user registered", user: "John Doe", time: "2 mins ago", type: "user" },
-    { id: 2, action: "Premium subscription", user: "Jane Smith", time: "15 mins ago", type: "payment" },
-    { id: 3, action: "New post created", user: "Alice Johnson", time: "1 hour ago", type: "post" },
-    { id: 4, action: "User reported content", user: "Bob Wilson", time: "2 hours ago", type: "report" },
-    { id: 5, action: "Profile verified", user: "Sarah Connor", time: "3 hours ago", type: "verify" },
-  ]);
-
-  useEffect(() => {
-    setStats({
-      totalUsers: 1247,
-      activeUsers: 892,
-      totalPosts: 3456,
-      premiumUsers: 156,
-      totalRevenue: 4580,
-      newUsersThisMonth: 89,
-    });
-  }, []);
+  const pct = (part: number, total: number) =>
+    total > 0 ? `${Math.round((part / total) * 100)}% of total` : undefined;
 
   const statCards = [
     {
@@ -56,8 +62,6 @@ const AdminDashboard = () => {
       icon: Users,
       color: "from-green-500 to-emerald-600",
       bgColor: "bg-green-50 dark:bg-green-900/20",
-      change: "+12%",
-      positive: true,
     },
     {
       title: "Active Users",
@@ -65,8 +69,7 @@ const AdminDashboard = () => {
       icon: UserCheck,
       color: "from-blue-500 to-cyan-600",
       bgColor: "bg-blue-50 dark:bg-blue-900/20",
-      change: "+8%",
-      positive: true,
+      hint: pct(stats.activeUsers, stats.totalUsers),
     },
     {
       title: "Total Posts",
@@ -74,8 +77,6 @@ const AdminDashboard = () => {
       icon: FileText,
       color: "from-purple-500 to-violet-600",
       bgColor: "bg-purple-50 dark:bg-purple-900/20",
-      change: "+23%",
-      positive: true,
     },
     {
       title: "Premium Users",
@@ -83,8 +84,7 @@ const AdminDashboard = () => {
       icon: Shield,
       color: "from-amber-500 to-orange-600",
       bgColor: "bg-amber-50 dark:bg-amber-900/20",
-      change: "+5%",
-      positive: true,
+      hint: pct(stats.premiumUsers, stats.totalUsers),
     },
     {
       title: "Revenue",
@@ -92,8 +92,6 @@ const AdminDashboard = () => {
       icon: CreditCard,
       color: "from-pink-500 to-rose-600",
       bgColor: "bg-pink-50 dark:bg-pink-900/20",
-      change: "+18%",
-      positive: true,
     },
     {
       title: "New This Month",
@@ -101,30 +99,51 @@ const AdminDashboard = () => {
       icon: TrendingUp,
       color: "from-teal-500 to-green-600",
       bgColor: "bg-teal-50 dark:bg-teal-900/20",
-      change: "-3%",
-      positive: false,
     },
   ];
 
   const quickActions = [
-    { title: "User Management", href: "/admin/user-management", icon: Users, description: "Manage user accounts and roles" },
-    { title: "Payment History", href: "/admin/payment-history", icon: CreditCard, description: "View payment transactions" },
-    { title: "Edit Profile", href: "/admin/profile-update", icon: BarChart3, description: "Update your admin profile" },
+    {
+      title: "User Management",
+      href: "/admin/user-management",
+      icon: Users,
+      description: "Manage user accounts and roles",
+    },
+    {
+      title: "Payment History",
+      href: "/admin/payment-history",
+      icon: CreditCard,
+      description: "View payment transactions",
+    },
+    {
+      title: "Edit Profile",
+      href: "/admin/profile-update",
+      icon: BarChart3,
+      description: "Update your admin profile",
+    },
   ];
 
   const getActivityIcon = (type: string) => {
     switch (type) {
-      case "user": return <UserCheck className="w-4 h-4 text-green-500" />;
-      case "payment": return <CreditCard className="w-4 h-4 text-amber-500" />;
-      case "post": return <FileText className="w-4 h-4 text-blue-500" />;
-      case "report": return <UserX className="w-4 h-4 text-red-500" />;
-      case "verify": return <Shield className="w-4 h-4 text-purple-500" />;
-      default: return <Activity className="w-4 h-4 text-gray-500" />;
+      case "user":
+        return <UserCheck className="w-4 h-4 text-green-500" />;
+      case "payment":
+        return <CreditCard className="w-4 h-4 text-amber-500" />;
+      case "post":
+        return <FileText className="w-4 h-4 text-blue-500" />;
+      case "report":
+        return <UserX className="w-4 h-4 text-red-500" />;
+      case "verify":
+        return <Shield className="w-4 h-4 text-purple-500" />;
+      default:
+        return <Activity className="w-4 h-4 text-gray-500" />;
     }
   };
 
+  const recentActivity: TActivity[] = stats.recentActivity ?? [];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-6">
+    <div className="p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -135,10 +154,19 @@ const AdminDashboard = () => {
             <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
               Admin Dashboard
             </h1>
+            {isLoading && (
+              <Loader2 className="w-5 h-5 animate-spin text-green-500" />
+            )}
           </div>
           <p className="text-gray-500 dark:text-gray-400">
-            Welcome back! Here&apos;s an overview of your gardening community platform.
+            Welcome back! Here&apos;s a live overview of your gardening community
+            platform.
           </p>
+          {isError && (
+            <p className="mt-2 text-sm text-red-500">
+              Could not load live stats. Please try refreshing.
+            </p>
+          )}
         </div>
 
         {/* Stats Grid */}
@@ -150,15 +178,20 @@ const AdminDashboard = () => {
             >
               <div className="flex items-center justify-between mb-4">
                 <div className={`p-3 rounded-xl ${stat.bgColor}`}>
-                  <stat.icon className={`w-6 h-6 bg-gradient-to-r ${stat.color} bg-clip-text`} style={{ color: 'transparent', backgroundClip: 'text', WebkitBackgroundClip: 'text' }} />
+                  <stat.icon className="w-6 h-6 text-green-600" />
                 </div>
-                <div className={`flex items-center gap-1 text-sm font-medium ${stat.positive ? 'text-green-500' : 'text-red-500'}`}>
-                  {stat.positive ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
-                  {stat.change}
-                </div>
+                {stat.hint && (
+                  <span className="text-xs font-medium text-gray-400 dark:text-gray-500">
+                    {stat.hint}
+                  </span>
+                )}
               </div>
               <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-1">
-                {stat.value}
+                {isLoading ? (
+                  <span className="inline-block h-7 w-16 rounded bg-gray-200 dark:bg-gray-700 animate-pulse" />
+                ) : (
+                  stat.value
+                )}
               </h3>
               <p className="text-gray-500 dark:text-gray-400 text-sm">
                 {stat.title}
@@ -204,9 +237,15 @@ const AdminDashboard = () => {
               Recent Activity
             </h2>
             <div className="space-y-4">
-              {recentActivity.map((activity) => (
+              {isLoading && (
+                <p className="text-sm text-gray-400">Loading activity…</p>
+              )}
+              {!isLoading && recentActivity.length === 0 && (
+                <p className="text-sm text-gray-400">No recent activity yet.</p>
+              )}
+              {recentActivity.map((activity, idx) => (
                 <div
-                  key={activity.id}
+                  key={idx}
                   className="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
                 >
                   <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
@@ -217,15 +256,12 @@ const AdminDashboard = () => {
                       {activity.action}
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {activity.user} • {activity.time}
+                      {activity.user} • {timeAgo(activity.time)}
                     </p>
                   </div>
                 </div>
               ))}
             </div>
-            <button className="w-full mt-4 py-2 text-sm font-medium text-green-600 hover:text-green-700 transition-colors">
-              View All Activity
-            </button>
           </div>
         </div>
 
@@ -234,11 +270,21 @@ const AdminDashboard = () => {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-xl font-bold mb-2">Platform Health</h3>
-              <p className="text-green-100">All systems operational. Server uptime: 99.9%</p>
+              <p className="text-green-100">
+                {isError
+                  ? "API unreachable — check the server."
+                  : "Database connected · API online · All systems operational."}
+              </p>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-green-300 rounded-full animate-pulse" />
-              <span className="font-medium">Healthy</span>
+              <div
+                className={`w-3 h-3 rounded-full animate-pulse ${
+                  isError ? "bg-red-300" : "bg-green-300"
+                }`}
+              />
+              <span className="font-medium">
+                {isError ? "Degraded" : "Healthy"}
+              </span>
             </div>
           </div>
         </div>

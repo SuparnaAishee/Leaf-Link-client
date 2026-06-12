@@ -1,12 +1,12 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@nextui-org/button";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FieldValues, SubmitHandler } from "react-hook-form";
-import { Leaf, Loader2 } from "lucide-react";
+import { Leaf, Loader2, Shield, User } from "lucide-react";
 
 import { loginValidationSchema } from "@/src/schemas/login.validation";
 import { useUserLogin } from "@/src/hooks/auth.hook";
@@ -22,20 +22,33 @@ const LoginPage = () => {
   const redirect = searchParams.get("redirect");
   const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
 
+  // Tracks a one-click "quick login" so we can route admins straight to /admin.
+  const [quickRole, setQuickRole] = useState<null | "admin" | "user">(null);
+  const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
+
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    setPendingRedirect(null);
     handleUserLogin(data);
+    userLoading(true);
+  };
+
+  const quickLogin = (
+    role: "admin" | "user",
+    email: string,
+    password: string,
+    dest: string,
+  ) => {
+    setQuickRole(role);
+    setPendingRedirect(dest);
+    handleUserLogin({ email, password });
     userLoading(true);
   };
 
   useEffect(() => {
     if (!isPending && isSuccess) {
-      if (redirect) {
-        router.push(redirect);
-      } else {
-        router.push("/");
-      }
+      router.push(pendingRedirect || redirect || "/");
     }
-  }, [isPending, isSuccess, redirect, router]);
+  }, [isPending, isSuccess, redirect, router, pendingRedirect]);
 
   return (
     <div className="min-h-[calc(100vh-200px)] flex items-center justify-center px-4 py-8">
@@ -88,6 +101,58 @@ const LoginPage = () => {
               )}
             </Button>
           </LLForm>
+
+          {/* Quick access for recruiters / reviewers */}
+          <div className="mt-6">
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
+              <span className="text-xs font-medium uppercase tracking-wide text-gray-400">
+                Quick access for recruiters
+              </span>
+              <div className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <Button
+                className="border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-xl h-11 hover:border-green-400 hover:text-green-600 transition-all"
+                variant="bordered"
+                disabled={isPending}
+                onClick={() =>
+                  quickLogin("user", "demo@leaflink.app", "demo1234", "/")
+                }
+              >
+                {isPending && quickRole === "user" ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    Demo User
+                  </span>
+                )}
+              </Button>
+
+              <Button
+                className="border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-xl h-11 hover:border-emerald-400 hover:text-emerald-600 transition-all"
+                variant="bordered"
+                disabled={isPending}
+                onClick={() =>
+                  quickLogin("admin", "admin@gmail.com", "admin123", "/admin")
+                }
+              >
+                {isPending && quickRole === "admin" ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <Shield className="w-4 h-4" />
+                    Admin
+                  </span>
+                )}
+              </Button>
+            </div>
+            <p className="mt-2 text-center text-xs text-gray-400">
+              One-click login — no credentials needed.
+            </p>
+          </div>
 
           <div className="mt-6 text-center">
             <p className="text-gray-600 dark:text-gray-400">
