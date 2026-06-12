@@ -2,10 +2,12 @@
 
 import {
   ArrowLeft,
+  CalendarDays,
   CreditCard,
   LayoutDashboard,
   Leaf,
   LogOut,
+  ShieldCheck,
   UserCog,
   Users,
 } from "lucide-react";
@@ -18,6 +20,12 @@ import { useUser } from "@/src/context/user.provider";
 export const adminNavItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/user-management", label: "User Management", icon: Users },
+  {
+    href: "/admin/content-moderation",
+    label: "Content Moderation",
+    icon: ShieldCheck,
+  },
+  { href: "/admin/event-management", label: "Event Management", icon: CalendarDays },
   { href: "/admin/payment-history", label: "Payment History", icon: CreditCard },
   { href: "/admin/profile-update", label: "Profile Update", icon: UserCog },
 ];
